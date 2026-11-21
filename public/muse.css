@@ -163,3 +163,56 @@ body .gallery .tile h3 { margin: 0; font: 600 1.3rem 'Playfair Display', serif; 
   .spotlight-heading > p { margin-top: .6rem; }
   .spotlight-grid { grid-template-columns: minmax(0, 1fr); }
 }
+.signature-logo { display: block; max-width: 100%; height: auto; }
+.signature-header { width: clamp(8rem, 15vw, 11rem); }
+body > header.studio-header { position: relative; z-index: 3; }
+.studio-header .logo { flex-shrink: 0; }
+.studio-menu { display: none; }
+body .welcome-signature { min-width: 0; padding: clamp(1rem, 5vw, 5rem); }
+.signature-welcome { width: min(100%, 35rem); border-radius: 1.5rem; box-shadow: 0 24px 60px #653b601f; }
+.signature-footer { width: clamp(9rem, 18vw, 13rem); border-radius: .65rem; }
+.studio-footer-link { display: inline-block; }
+@media (max-width: 900px) {
+  body > header.studio-header { flex-wrap: nowrap; gap: .7rem; padding-inline: 5%; }
+  .studio-header > nav { display: none; }
+  .studio-header > .pill { margin-left: auto; padding: .65rem .85rem; }
+  .studio-menu { display: block; }
+  .studio-menu summary {
+    display: flex;
+    align-items: center;
+    min-height: 44px;
+    cursor: pointer;
+    border: 1px solid var(--plum);
+    border-radius: 2rem;
+    padding: .6rem .85rem;
+    font-weight: 650;
+  }
+  .studio-menu summary::-webkit-details-marker { display: none; }
+  .studio-menu[open] summary { background: var(--plum); color: white; }
+  .studio-header .studio-menu nav {
+    position: absolute;
+    inset: 100% 5% auto auto;
+    display: grid;
+    width: min(20rem, 90vw);
+    max-height: min(70vh, 32rem);
+    overflow-y: auto;
+    gap: .25rem;
+    padding: 1rem;
+    border: 1px solid var(--gold);
+    border-radius: 1rem;
+    background: var(--ivory);
+    box-shadow: 0 18px 45px #39273625;
+  }
+  .studio-menu nav a { display: flex; align-items: center; min-height: 44px; padding: .3rem .55rem; }
+  .studio-menu .studio-menu-home { margin-bottom: .25rem; }
+  .signature-menu { width: 9rem; }
+}
+@media (max-width: 760px) {
+  body .welcome-signature { height: auto; min-height: 0; padding: 0 7% 2.5rem; }
+  .signature-welcome { width: min(100%, 26rem); }
+  .signature-header { width: clamp(6.5rem, 34vw, 9rem); }
+}
+@media (max-width: 375px) {
+  .studio-header > .pill { padding-inline: .55rem; font-size: .69rem; }
+  .studio-menu summary { padding-inline: .65rem; }
+}
