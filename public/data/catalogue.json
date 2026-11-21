@@ -1,0 +1,219 @@
+{
+  "source": "Existing Jeanrie Beauty Studio catalogue",
+  "catalogues": [
+    {
+      "title": "Justine South Africa online catalogue",
+      "url": "https://my.justine.co.za/"
+    }
+  ],
+  "products": [
+    {
+      "id": "justine-tissue-gift",
+      "name": "Tissue Oil Gift Set",
+      "category": "Body care",
+      "image": "/products/justine-tissue-gift.jpg"
+    },
+    {
+      "id": "j-gold-gift",
+      "name": "Tissue Oil Gold Gift Set SPF 25",
+      "category": "Body care",
+      "image": "/products/j-gold-gift.jpg"
+    },
+    {
+      "id": "j-tissue-200",
+      "name": "Tissue Oil 200 ml",
+      "category": "Body care",
+      "image": "/products/j-tissue-200.jpg"
+    },
+    {
+      "id": "j-butter",
+      "name": "Tissue Oil Softening Body Butter",
+      "category": "Body care",
+      "image": "/products/j-butter.jpg"
+    },
+    {
+      "id": "j-balance",
+      "name": "Body Balance Gel & Cream",
+      "category": "Body care",
+      "image": "/products/j-balance.jpg"
+    },
+    {
+      "id": "j-cantare",
+      "name": "Cantare Gift Set",
+      "category": "Fragrance",
+      "image": "/products/j-cantare.jpg"
+    },
+    {
+      "id": "j-carpe",
+      "name": "Carpe Diem Gift Set",
+      "category": "Fragrance",
+      "image": "/products/j-carpe.jpg"
+    },
+    {
+      "id": "j-pedi",
+      "name": "Pedi Perfect Gift Set",
+      "category": "Body care",
+      "image": "/products/j-pedi.jpg"
+    },
+    {
+      "id": "j-imperia",
+      "name": "Imperia Gift Set",
+      "category": "Fragrance",
+      "image": "/products/j-imperia.jpg"
+    },
+    {
+      "id": "j-honey",
+      "name": "Honey Herbal Gift Set",
+      "category": "Body care",
+      "image": "/products/j-honey.jpg"
+    },
+    {
+      "id": "j-esteem",
+      "name": "Esteem Gift Set",
+      "category": "Fragrance",
+      "image": "/products/j-esteem.jpg"
+    },
+    {
+      "id": "j-spa1",
+      "name": "Premium Spa Bath Foam — variant 1",
+      "category": "Body care",
+      "image": "/products/j-spa1.jpg"
+    },
+    {
+      "id": "j-spa2",
+      "name": "Premium Spa Bath Foam — variant 2",
+      "category": "Body care",
+      "image": "/products/j-spa2.jpg"
+    },
+    {
+      "id": "j-spa3",
+      "name": "Premium Spa Bath Foam — variant 3",
+      "category": "Body care",
+      "image": "/products/j-spa3.jpg"
+    },
+    {
+      "id": "j-amber",
+      "name": "Diffuser Sparkling Amber Lily",
+      "category": "Home fragrance",
+      "image": "/products/j-amber.jpg"
+    },
+    {
+      "id": "j-candle",
+      "name": "Candles Set Dark Orchid",
+      "category": "Home fragrance",
+      "image": "/products/j-candle.jpg"
+    },
+    {
+      "id": "j-orchid",
+      "name": "Diffuser Dark Orchid",
+      "category": "Home fragrance",
+      "image": "/products/j-orchid.jpg"
+    },
+    {
+      "id": "j-gold-spf",
+      "name": "Tissue Oil Gold SPF 25",
+      "category": "Skincare",
+      "image": "/products/j-gold-spf.jpg"
+    },
+    {
+      "id": "j-fortigrain",
+      "name": "FortiGrain Day Cream",
+      "category": "Skincare",
+      "image": "/products/j-fortigrain.jpg"
+    },
+    {
+      "id": "baofirm",
+      "name": "Ageless BaoFirm skincare trio",
+      "category": "Skincare",
+      "image": "/products/baofirm.jpg",
+      "imageAlt": "Representative BaoFirm night cream from the skincare range"
+    },
+    {
+      "id": "tissue-oil-body-butter-pair",
+      "name": "Tissue Oil body butter (pair)",
+      "category": "Body care",
+      "image": "/products/body-butter.jpg",
+      "imageAlt": "Representative Tissue Oil Body Butter image"
+    },
+    {
+      "id": "tabasheer-edp-set",
+      "name": "Tabasheer EDP set",
+      "category": "Fragrance",
+      "image": "/products/tabasheer-reference.jpg",
+      "imageAlt": "Representative Tabasheer range image"
+    },
+    {
+      "id": "pure-for-him-edt",
+      "name": "Pure For Him EDT",
+      "category": "Fragrance"
+    },
+    {
+      "id": "tissue-oil-repair-200-ml",
+      "name": "Tissue Oil Repair 200 ml",
+      "category": "Body care",
+      "image": "/products/active-repair.jpg",
+      "imageAlt": "Representative Active Repair Oil image; size may differ"
+    },
+    {
+      "id": "dare-to-wish-edt-sample-2-ml",
+      "name": "Dare To Wish EDT sample 2 ml",
+      "category": "Fragrance"
+    },
+    {
+      "id": "a-firm-brightening-even-tone-trio",
+      "name": "A-Firm Brightening Even Tone trio",
+      "category": "Skincare"
+    },
+    {
+      "id": "a-firm-platinum-serum-and-day-cream",
+      "name": "A-Firm Platinum serum and day cream",
+      "category": "Skincare"
+    },
+    {
+      "id": "body-balance-lotion-and-body-butter",
+      "name": "Body Balance lotion and body butter",
+      "category": "Body care"
+    },
+    {
+      "id": "body-balance-lotion-scrub-and-roll-on",
+      "name": "Body Balance lotion, scrub and roll-on",
+      "category": "Body care"
+    },
+    {
+      "id": "carpe-diem-cologne-100-ml-50-ml",
+      "name": "Carpe Diem Cologne 100 ml + 50 ml",
+      "category": "Fragrance"
+    },
+    {
+      "id": "honey-herbal-nail-cream-and-glass-file",
+      "name": "Honey Herbal nail cream and glass file",
+      "category": "Body care"
+    },
+    {
+      "id": "ageless-baofirm-collection",
+      "name": "Ageless BaoFirm collection",
+      "category": "Skincare"
+    },
+    {
+      "id": "pro-age-renewal-collection",
+      "name": "Pro-Age Renewal collection",
+      "category": "Skincare"
+    },
+    {
+      "id": "even-radiant-collection",
+      "name": "Even & Radiant collection",
+      "category": "Skincare"
+    },
+    {
+      "id": "tissue-oil-skin-repair",
+      "name": "Tissue Oil Skin Repair",
+      "category": "Body care"
+    },
+    {
+      "id": "tabasheer-gold-edp-100-ml",
+      "name": "Tabasheer Gold EDP 100 ml",
+      "category": "Fragrance"
+    }
+  ],
+  "promotions": []
+}
