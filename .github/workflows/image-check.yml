@@ -1,0 +1,25 @@
+name: Check site images
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'public/**'
+      - 'scripts/check-images.py'
+      - '.github/workflows/image-check.yml'
+  pull_request:
+    paths:
+      - 'public/**'
+      - 'scripts/check-images.py'
+      - '.github/workflows/image-check.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  images:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 scripts/check-images.py

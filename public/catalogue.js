@@ -63,18 +63,25 @@
     }
     for (const product of matches) {
       const card = element('article', '', 'commerce-card');
+      const placeholder = () => {
+        const art = element('div', '', 'product-category-art');
+        const monogram = element('span', 'J', 'media-monogram');
+        monogram.setAttribute('aria-hidden', 'true');
+        art.append(monogram, element('span', 'Product photo unavailable'));
+        return art;
+      };
       if (product.image) {
         const image = element('img');
-        image.src = product.image;
         image.alt = product.imageAlt || product.name;
         image.width = 300;
         image.height = 300;
         image.loading = 'lazy';
+        image.decoding = 'async';
+        image.addEventListener('error', () => image.replaceWith(placeholder()), { once: true });
+        image.src = product.image;
         card.append(image);
       } else {
-        const art = element('div', product.category, 'product-category-art');
-        art.setAttribute('aria-hidden', 'true');
-        card.append(art);
+        card.append(placeholder());
       }
       card.append(element('small', product.category), element('h3', product.name));
       for (const deal of activeDeals(product.id)) {

@@ -104,3 +104,36 @@ body .experience-section h2 em,
 body .result-panel h3,
 body .plan-summary h3,
 body .shop .product .category { color: var(--plum); }
+.media-monogram {
+  display: grid;
+  place-items: center;
+  width: 3.5rem;
+  aspect-ratio: 1;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  font: 400 2rem 'Playfair Display', serif;
+}
+.product-category-art {
+  align-content: center;
+  gap: .75rem;
+  background: radial-gradient(ellipse at 50% 65%, #fffaf7, #efe0e7 75%);
+  font-size: .875rem;
+}
+.gallery-note { color: var(--ink); }
+body .gallery .tile {
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 1rem;
+  min-height: 13rem;
+  border: 1px solid var(--gold);
+  border-radius: 1.5rem;
+  color: var(--plum);
+  text-align: center;
+  padding: 1.2rem;
+}
+body .gallery .t1 { background: radial-gradient(ellipse at center, var(--ivory), #ead2db); }
+body .gallery .t2 { background: radial-gradient(ellipse at center, var(--ivory), #d8e0cd); }
+body .gallery .t3 { background: radial-gradient(ellipse at center, var(--ivory), #eadcc6); }
+body .gallery .tile .media-monogram { padding: 0; }
+body .gallery .tile h3 { margin: 0; font: 600 1.3rem 'Playfair Display', serif; }
