@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="en-ZA">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#F7F0E9">
+<meta name="description" content="Try nail colours and art on your own photo in Jeanrie’s Funky Nail Lab.">
+<title>Funky Nail Lab | Jeanrie’s Beauty Studio</title>
+<link rel="icon" href="/images/jeanrie-icon.png">
+<link rel="stylesheet" href="/style.css">
+<link rel="stylesheet" href="/muse.css">
+<link rel="stylesheet" href="/nail-lab/lab.css">
+<script type="module" src="/nail-lab/app.js"></script>
+</head>
+<body class="lab">
+<a class="skip-link" href="#main-content">Skip to content</a>
+<header class="lab-header">
+  <a href="/"><img class="signature-logo signature-header" src="/images/jeanrie-signature-320.webp" width="320" height="320" alt="Jeanrie’s Beauty Studio home"></a>
+  <a class="lab-back" href="/">Studio home</a>
+  <a class="pill" href="https://wa.me/27822265134">WhatsApp booking</a>
+</header>
+<main id="main-content" class="lab-main" tabindex="-1">
+  <section class="lab-intro" aria-labelledby="lab-title">
+    <p class="eyebrow">JEANRIE’S BEAUTY STUDIO</p>
+    <h1 id="lab-title">Funky Nail <em>Lab</em></h1>
+    <p>Try colour and nail art on your own photo, one nail at a time.</p>
+  </section>
+  <div class="lab-workspace">
+    <section class="lab-panel lab-preview" aria-labelledby="photo-title">
+      <h2 id="photo-title">Your photo</h2>
+      <p id="photo-help">Use bright, even light. Photograph the nails from above with fingers or toes apart and the whole nail visible. JPG, PNG or WebP, up to 15 MB.</p>
+      <div class="lab-row">
+        <label class="lab-action" for="upload">Choose photo</label>
+        <input class="visually-hidden" id="upload" type="file" accept="image/jpeg,image/png,image/webp" aria-describedby="photo-help">
+        <button type="button" id="camera-open">Use camera</button>
+        <label class="lab-action" for="camera">Open device camera</label>
+        <input class="visually-hidden" id="camera" type="file" accept="image/jpeg,image/png,image/webp" capture="environment" aria-describedby="photo-help">
+      </div>
+      <div id="camera-preview" hidden>
+        <video id="camera-video" autoplay playsinline muted aria-label="Live camera preview"></video>
+        <div class="lab-row"><button type="button" id="capture">Take photo</button><button type="button" id="cancel-camera">Close camera</button></div>
+      </div>
+      <label for="area">Treatment area</label>
+      <select id="area">
+        <option value="left-hand">Left hand</option><option value="right-hand">Right hand</option><option value="both-hands">Both hands</option>
+        <option value="left-foot">Left foot</option><option value="right-foot">Right foot</option><option value="both-feet">Both feet</option>
+      </select>
+      <div id="preview-frame" class="lab-frame">
+        <p id="empty-photo">Add a photo to start mapping nails.</p>
+        <canvas id="preview" width="800" height="650" aria-label="Nail design preview" hidden></canvas>
+      </div>
+      <div class="lab-row">
+        <button type="button" id="before" aria-pressed="false">Show original photo</button>
+        <button type="button" id="rotate">Rotate 90°</button>
+        <button type="button" id="delete-photo">Delete current photo</button>
+      </div>
+      <details>
+        <summary>Crop, zoom and reposition</summary>
+        <p>Zoom fills the crop. Move the photo within the preview frame. The exported design uses this frame.</p>
+        <div class="lab-grid">
+          <label>Zoom <input id="zoom" type="range" min="1" max="3" step=".05" value="1"></label>
+          <label>Horizontal position <input id="pan-x" type="range" min="-100" max="100" value="0"></label>
+          <label>Vertical position <input id="pan-y" type="range" min="-100" max="100" value="0"></label>
+          <label>Crop ratio <select id="crop"><option value="photo">Original</option><option value="square">Square</option><option value="portrait">Portrait 4:5</option><option value="landscape">Landscape 5:4</option></select></label>
+        </div>
+      </details>
+      <p class="lab-status" role="status" id="lab-status">Your photo stays in this browser unless you choose to share it.</p>
+    </section>
+
+    <section class="lab-panel" aria-labelledby="map-title">
+      <h2 id="map-title">Map your nails</h2>
+      <p>Tap a nail to place its outline. Drag the four corners to fit it, or adjust the measurements below. Place the first edge at the tip. Use one photo that shows both sides when mapping both hands or feet.</p>
+      <p class="lab-note">Mapping is manual. The studio does not detect nails automatically.</p>
+      <div class="lab-grid">
+        <label>Nail to map or copy from <select id="active-nail"></select></label>
+        <button type="button" id="place" aria-pressed="false">Place on photo</button>
+        <button type="button" id="centre">Add at centre</button>
+        <button type="button" id="remove-nail">Remove mapped nail</button>
+      </div>
+      <details id="boundary-controls">
+        <summary>Adjust active nail with the keyboard</summary>
+        <div class="lab-grid">
+          <label>Horizontal centre (%) <input id="nail-x" type="number" min="0" max="100" step=".1"></label>
+          <label>Vertical centre (%) <input id="nail-y" type="number" min="0" max="100" step=".1"></label>
+          <label>Width (% of photo) <input id="nail-w" type="number" min="1" max="60" step=".1"></label>
+          <label>Height (% of photo) <input id="nail-h" type="number" min="1" max="60" step=".1"></label>
+          <label>Angle (degrees) <input id="nail-angle" type="number" min="-180" max="180" step="1"></label>
+        </div>
+        <button type="button" id="adjust-nail">Apply boundary settings</button>
+      </details>
+      <fieldset>
+        <legend>Apply designs to</legend>
+        <div class="lab-nails" id="nail-list"></div>
+        <div class="lab-row">
+          <button type="button" id="select-active">Active nail only</button>
+          <button type="button" id="select-side">Active side</button>
+          <button type="button" id="select-all">All mapped nails</button>
+        </div>
+      </fieldset>
+      <div class="lab-row">
+        <button type="button" id="copy">Copy active design to selection</button>
+        <button type="button" id="undo">Undo</button>
+        <button type="button" id="redo">Redo</button>
+        <button type="button" id="reset-art">Reset nail colours</button>
+      </div>
+    </section>
+
+    <section class="lab-panel" aria-labelledby="art-title">
+      <h2 id="art-title">Colour and nail art</h2>
+      <div class="lab-grid">
+        <label>Brand <select id="brand"><option value="">All collections</option><option>Crystal Clawz</option><option>Gel-It</option><option>Custom</option></select></label>
+        <label>Shade name or code <input type="search" id="shade-search"></label>
+        <label>Colour category <select id="category"><option value="">All categories</option></select></label>
+        <label>Supplier finish <select id="shade-finish"><option value="">All finishes</option></select></label>
+      </div>
+      <p class="lab-note">Changes preview on selected nails. Choose Apply to keep them. <a class="lab-preview-link" href="#photo-title">Back to preview</a>.</p>
+      <p class="lab-note">Swatches and photo overlays are illustrative. Ask Jeanrie to confirm colour and studio stock.</p>
+      <div id="shades" class="lab-swatches" aria-label="Colour swatches"></div>
+      <p id="shade-info" role="status">Custom colour</p>
+      <div class="lab-grid">
+        <label>Custom base <input id="colour" type="color" value="#8c4163"></label>
+        <label>Detail colour <input id="accent" type="color" value="#f5dfaa"></label>
+        <label>Nail art <select id="pattern"></select></label>
+        <label>Preview finish <select id="finish"><option>Glossy</option><option>Matte</option><option>Chrome</option><option>Glitter</option><option>Shimmer</option></select></label>
+        <label>Opacity <input id="opacity" type="range" min="20" max="100" value="78"></label>
+        <label>Pattern scale <input id="scale" type="range" min="50" max="175" value="100"></label>
+        <label>Pattern offset <input id="offset" type="range" min="-40" max="40" value="0"></label>
+      </div>
+      <div class="lab-row">
+        <button type="button" id="apply" class="lab-primary">Apply to selected nails</button>
+        <button type="button" id="apply-all">Apply to all nails</button>
+        <button type="button" id="favourite">Save colour as favourite</button>
+      </div>
+      <details><summary>Recent and favourite colours</summary>
+        <div id="recent" class="lab-swatches"></div><div id="favourites" class="lab-swatches"></div>
+        <button type="button" id="clear-colours">Clear colour history</button>
+      </details>
+      <details><summary>Suggested combinations</summary>
+        <div class="lab-row">
+          <button type="button" data-look="muse">Muse mix</button>
+          <button type="button" data-look="celebrate">Celebration mix</button>
+          <button type="button" data-look="garden">Garden mix</button>
+        </div>
+        <p>Combinations alternate designs across selected nails. These are custom colours.</p>
+      </details>
+    </section>
+
+    <section class="lab-panel" aria-labelledby="save-title">
+      <h2 id="save-title">Save, share or book</h2>
+      <label>Design name <input id="design-name" maxlength="60" placeholder="My nail design"></label>
+      <div class="lab-row">
+        <button type="button" id="save">Save on this device</button>
+        <button type="button" id="save-copy">Save as a copy</button>
+        <button type="button" id="clear-design">Clear current design</button>
+      </div>
+      <label>Saved designs <select id="saved"><option value="">Choose a saved design</option></select></label>
+      <div class="lab-row">
+        <button type="button" id="restore">Open saved design</button>
+        <button type="button" id="delete-saved">Delete saved design</button>
+      </div>
+      <div class="lab-row">
+        <button type="button" id="png">Download PNG</button>
+        <button type="button" id="jpg">Download JPG</button>
+        <button type="button" id="share">Share image</button>
+      </div>
+      <label>Additional nail-art requests <textarea id="notes" maxlength="300" rows="3"></textarea></label>
+      <label>Design summary <textarea id="summary" readonly rows="6"></textarea></label>
+      <a id="whatsapp" class="lab-action lab-primary" href="https://wa.me/27822265134" target="_blank" rel="noopener noreferrer">Enquire on WhatsApp</a>
+      <p class="lab-note">Download the design and attach it in WhatsApp, or use your phone’s share menu if supported. Jeanrie confirms appointments separately.</p>
+      <p class="lab-note">Saving stores the photo and design in this browser. Delete saved designs separately to remove their photos. Replace the current photo without changing any saved design.</p>
+    </section>
+  </div>
+</main>
+<footer><a href="/">Jeanrie’s Beauty Studio</a></footer>
+</body>
+</html>

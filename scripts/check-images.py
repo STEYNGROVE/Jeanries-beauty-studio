@@ -53,7 +53,10 @@ def references():
             urls = {url for url in candidates if IMAGE.search(url.strip())}
         elif suffix == '.js':
             literals = re.findall(r'''["']([^"'\n<>\s]+)["']''', path.read_text())
-            urls = {url for url in literals if IMAGE.search(url)}
+            # Download names and other plain strings are not network asset paths.
+            urls = {url for url in literals if IMAGE.search(url) and url.startswith(('/', './', '../', 'https://'))}
+            urls.update(re.findall(r'''\.src\s*=\s*["']([^"'
+]+)["']''', path.read_text()))
         elif IMAGE.search(relative):
             urls = {'/' + relative}
         else:

@@ -1,0 +1,138 @@
+{
+  "reference": "Illustrative screen colours based on supplier listings. Studio stock is unconfirmed.",
+  "lastSync": null,
+  "shades": [
+    {
+      "brand": "Crystal Clawz",
+      "name": "Oxblood",
+      "code": "094",
+      "colour": "#561923",
+      "category": "Red",
+      "finish": "Unspecified",
+      "collection": "Indulgence",
+      "source": "https://crystalclawz.co.za/collections/gel-polish",
+      "verifiedOn": "2026-11-21",
+      "availability": "Unconfirmed"
+    },
+    {
+      "brand": "Crystal Clawz",
+      "name": "Polar Fleece",
+      "code": "100",
+      "colour": "#f9f6f1",
+      "category": "White",
+      "finish": "Unspecified",
+      "collection": "Indulgence",
+      "source": "https://crystalclawz.co.za/collections/gel-polish",
+      "verifiedOn": "2026-11-21",
+      "availability": "Unconfirmed"
+    },
+    {
+      "brand": "Crystal Clawz",
+      "name": "Oh So Oyster",
+      "code": "008",
+      "colour": "#ddbdba",
+      "category": "Pink",
+      "finish": "Sheer",
+      "collection": "Sheer Seduction",
+      "source": "https://crystalclawz.co.za/collections/gel-polish",
+      "verifiedOn": "2026-11-21",
+      "availability": "Unconfirmed"
+    },
+    {
+      "brand": "Crystal Clawz",
+      "name": "Silver Lining",
+      "code": "19",
+      "colour": "#bfc1cc",
+      "category": "Silver",
+      "finish": "Glitter",
+      "collection": "Diamond",
+      "source": "https://crystalclawz.co.za/collections/gel-polish",
+      "verifiedOn": "2026-11-21",
+      "availability": "Unconfirmed"
+    },
+    {
+      "brand": "Crystal Clawz",
+      "name": "Antique Rose",
+      "code": "314",
+      "colour": "#b36e7a",
+      "category": "Pink",
+      "finish": "Unspecified",
+      "collection": "Indulgence Gen 2",
+      "source": "https://crystalclawz.co.za/collections/gel-polish",
+      "verifiedOn": "2026-11-21",
+      "availability": "Unconfirmed"
+    },
+    {
+      "brand": "Crystal Clawz",
+      "name": "Winter Skies",
+      "code": "199",
+      "colour": "#a6bfd7",
+      "category": "Blue",
+      "finish": "Unspecified",
+      "collection": "Indulgence",
+      "source": "https://crystalclawz.co.za/collections/gel-polish",
+      "verifiedOn": "2026-11-21",
+      "availability": "Unconfirmed"
+    },
+    {
+      "brand": "Gel-It",
+      "name": "Black Jack",
+      "code": "GP012",
+      "colour": "#151416",
+      "category": "Black",
+      "finish": "Glossy",
+      "collection": "Gel Colours",
+      "source": "https://maskscara.com/products/gp012-black-jack",
+      "verifiedOn": "2026-11-21",
+      "availability": "Unconfirmed"
+    },
+    {
+      "brand": "Gel-It",
+      "name": "Flaming Lamborghini",
+      "code": "GP011",
+      "colour": "#e3212e",
+      "category": "Red",
+      "finish": "Unspecified",
+      "collection": "Gel Colours",
+      "source": "https://maskscara.com/products/gp011-flaming-lamborghini",
+      "verifiedOn": "2026-11-21",
+      "availability": "Unconfirmed"
+    },
+    {
+      "brand": "Gel-It",
+      "name": "Sweet Cheeks",
+      "code": "GP293",
+      "colour": "#f4b4c9",
+      "category": "Pink",
+      "finish": "Unspecified",
+      "collection": "Gel Colours",
+      "source": "https://maskscara.com/products/gp293-sweet-cheeks",
+      "verifiedOn": "2026-11-21",
+      "availability": "Unconfirmed"
+    },
+    {
+      "brand": "Gel-It",
+      "name": "Red Velvet",
+      "code": "GP121",
+      "colour": "#861934",
+      "category": "Red",
+      "finish": "Unspecified",
+      "collection": "Gel Colours",
+      "source": "https://maskscara.com/collections/gel-colours",
+      "verifiedOn": "2026-11-21",
+      "availability": "Unconfirmed"
+    },
+    {
+      "brand": "Gel-It",
+      "name": "So Vain-illa",
+      "code": "GP194",
+      "colour": "#f1e3c7",
+      "category": "Cream",
+      "finish": "Unspecified",
+      "collection": "Gel Colours",
+      "source": "https://maskscara.com/products/5-pack-official-french-kit",
+      "verifiedOn": "2026-11-21",
+      "availability": "Unconfirmed"
+    }
+  ]
+}
