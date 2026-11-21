@@ -164,13 +164,13 @@ body .gallery .tile h3 { margin: 0; font: 600 1.3rem 'Playfair Display', serif; 
   .spotlight-grid { grid-template-columns: minmax(0, 1fr); }
 }
 .signature-logo { display: block; max-width: 100%; height: auto; }
-.signature-header { width: clamp(8rem, 15vw, 11rem); }
+.signature-header { width: clamp(7rem, 13vw, 9.75rem); }
 body > header.studio-header { position: relative; z-index: 3; }
 .studio-header .logo { flex-shrink: 0; }
 .studio-menu { display: none; }
 body .welcome-signature { min-width: 0; padding: clamp(1rem, 5vw, 5rem); }
-.signature-welcome { width: min(100%, 35rem); border-radius: 1.5rem; box-shadow: 0 24px 60px #653b601f; }
-.signature-footer { width: clamp(9rem, 18vw, 13rem); border-radius: .65rem; }
+.signature-welcome { width: 100%; border-radius: 1.5rem; box-shadow: 0 16px 40px #653b601a; }
+.signature-footer { width: clamp(8rem, 16vw, 10rem); border-radius: .65rem; }
 .studio-footer-link { display: inline-block; }
 @media (max-width: 900px) {
   body > header.studio-header { flex-wrap: nowrap; gap: .7rem; padding-inline: 5%; }
@@ -205,14 +205,23 @@ body .welcome-signature { min-width: 0; padding: clamp(1rem, 5vw, 5rem); }
   }
   .studio-menu nav a { display: flex; align-items: center; min-height: 44px; padding: .3rem .55rem; }
   .studio-menu .studio-menu-home { margin-bottom: .25rem; }
-  .signature-menu { width: 9rem; }
+  .signature-menu { width: 8rem; }
 }
 @media (max-width: 760px) {
   body .welcome-signature { height: auto; min-height: 0; padding: 0 7% 2.5rem; }
-  .signature-welcome { width: min(100%, 26rem); }
-  .signature-header { width: clamp(6.5rem, 34vw, 9rem); }
+  .signature-header { width: clamp(6rem, 30vw, 8rem); }
 }
 @media (max-width: 375px) {
   .studio-header > .pill { padding-inline: .55rem; font-size: .69rem; }
   .studio-menu summary { padding-inline: .65rem; }
+}
+.signature-picture { display: block; max-width: 100%; }
+.welcome-signature .signature-picture { width: min(100%, 27rem); }
+.signature-enquiry, .signature-section { width: 5.25rem; border-radius: .55rem; }
+.signature-basket { width: 4.5rem; margin-bottom: .65rem; border-radius: .55rem; }
+.signature-enquiry { margin-bottom: .75rem; }
+.signature-section-mark { display: flex; align-items: center; gap: 1rem; margin-bottom: .75rem; }
+.signature-section-mark h2 { margin: 0; }
+@media (max-width: 760px) {
+  .welcome-signature .signature-picture { width: min(100%, 23rem); }
 }
