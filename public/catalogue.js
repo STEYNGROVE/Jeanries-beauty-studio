@@ -87,6 +87,7 @@
       }
       const toggle = element('button', '', 'button');
       toggle.type = 'button';
+      toggle.dataset.product = product.id;
       function updateToggle() {
         const added = selected.has(product.id);
         toggle.textContent = added ? 'Remove from basket' : 'Add to basket';
@@ -102,6 +103,28 @@
       card.append(toggle);
       grid.append(card);
     }
+  }
+
+  function scheduleDealRefresh() {
+    const now = Date.now();
+    const next = catalogue.promotions
+      .flatMap(deal => [Date.parse(deal.startsAt), Date.parse(deal.endsAt)])
+      .filter(instant => instant > now)
+      .reduce((soonest, instant) => Math.min(soonest, instant), Infinity);
+    if (!Number.isFinite(next)) return;
+    setTimeout(() => {
+      if (Date.now() >= next) {
+        const focusedProduct = grid.contains(document.activeElement)
+          ? document.activeElement.dataset.product : null;
+        renderProducts();
+        if (focusedProduct) {
+          const buttons = [...grid.querySelectorAll('button[data-product]')];
+          (buttons.find(button => button.dataset.product === focusedProduct) || dealsOnly)
+            .focus({ preventScroll: true });
+        }
+      }
+      scheduleDealRefresh();
+    }, Math.min(next - now, 2_147_483_647));
   }
 
   send.addEventListener('click', () => {
@@ -137,6 +160,7 @@
     dealsOnly.addEventListener('change', renderProducts);
     renderBasket();
     renderProducts();
+    scheduleDealRefresh();
   }).catch(() => {
     status.textContent = 'The online catalogue is unavailable. Use the Justine catalogue links below or ask Jeanrie on WhatsApp.';
   });
