@@ -6,11 +6,13 @@ on:
     paths:
       - 'public/**'
       - 'scripts/check-images.py'
+      - 'scripts/check-glam-wall.py'
       - '.github/workflows/image-check.yml'
   pull_request:
     paths:
       - 'public/**'
       - 'scripts/check-images.py'
+      - 'scripts/check-glam-wall.py'
       - '.github/workflows/image-check.yml'
   workflow_dispatch:
 
@@ -22,4 +24,5 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - run: python3 scripts/check-glam-wall.py
       - run: python3 scripts/check-images.py

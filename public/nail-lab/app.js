@@ -1,4 +1,5 @@
 import { patterns, centre, rectangle, validQuad, draw } from './paint.js';
+import { savedLooks, styleParams } from '/playground/shared.js';
 import { detectNails } from './detect.js';
 import { decodePhoto, blobFromCanvas, designStore, readList, writeList } from './storage.js';
 
@@ -21,6 +22,13 @@ const customs=[
   credit('Champagne gold','#c4a36a','Gold'),credit('Ivory','#f7f0e9','Cream'),credit('Midnight teal','#225e65','Blue'),
 ];
 for(const [key,name] of Object.entries(patterns)) $('pattern').add(new Option(name,key));
+const incoming=styleParams();
+if(incoming.look) {
+  const {colour,accent,pattern,finish}=incoming.look;
+  $('colour').value=colour;$('accent').value=incoming.tint||accent;
+  $('pattern').value=pattern;$('finish').value=finish;hasChosenStyle=true;
+}
+
 
 function nailsFor() {
   if(state.auto)return Array.from({length:state.auto},(_,i)=>({id:'visible-'+i,name:'Nail '+(i+1)}));
@@ -380,15 +388,14 @@ document.querySelectorAll('[data-look]').forEach(button=>button.addEventListener
 }));
 
 async function updateList(selected=loadedId){
-  const items=await designStore('readonly',store=>store.getAll());
-  items.sort((a,b)=>b.updated-a.updated);
+  const items=await savedLooks('nail');
   $('saved').replaceChildren(new Option('Choose a saved design',''),...items.map(item=>new Option(item.name,item.id)));
   $('saved').value=selected||'';
 }
 async function saveDesign(copy) {
   try {
     const id=(!copy&&loadedId)||crypto.randomUUID(),name=$('design-name').value.trim()||'Nail design '+new Date().toLocaleDateString('en-ZA');
-    const record={id,name,updated:Date.now(),state:clone(state),notes:$('notes').value,photo:photoBlob};
+    const record={id,kind:'nail',name,updated:Date.now(),state:clone(state),notes:$('notes').value,photo:photoBlob};
     await designStore('readwrite',store=>store.put(record));loadedId=id;await updateList(id);say('Design saved on this device.');
   } catch {say('The design could not be saved. Browser storage may be unavailable or full.');}
 }
@@ -400,7 +407,7 @@ on('restore','click',async()=>{
     stopDetection();
     const token=++fileVersion;
     const record=await designStore('readonly',store=>store.get($('saved').value));
-    if(!record)throw Error();
+    if(!record||record.kind==='makeup')throw Error();
     const bitmap=await createImageBitmap(record.photo);
     if(token!==fileVersion){bitmap.close();return;}
     photo?.close();photo=bitmap;photoBlob=record.photo;state=record.state;loadedId=record.id;matrix=null;
@@ -442,7 +449,18 @@ fetch('/data/nail-shades.json').then(response=>{
     const values=[...new Set([...catalogue,...customs].map(item=>item[key]))].sort();
     for(const value of values)$(id).add(new Option(value,value));
   }
+  const query=new URLSearchParams(location.search);
+  const incomingShade=catalogue.find(row=>row.code===query.get('code')&&row.brand===query.get('brand')
+    &&(!query.has('collection')||row.collection===query.get('collection')));
+  if(incomingShade)pick(incomingShade);
   palette();
 }).catch(()=>{palette();say('Supplier palette unavailable. Custom colours still work.');});
-updateList().catch(()=>say('Local design storage is unavailable in this browser.'));
+updateList().then(()=>{
+  const id=new URLSearchParams(location.search).get('saved');
+  if(!id)return;
+  $('saved').value=id;
+  if($('saved').value)$('restore').click();
+  else say('This look is unavailable in this browser.');
+}).catch(()=>say('Local design storage is unavailable in this browser.'));
+
 palette();renderSavedColours();refresh();

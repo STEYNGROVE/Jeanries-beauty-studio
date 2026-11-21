@@ -1,0 +1,4 @@
+Google MediaPipe Tasks Vision for Web 0.10.32 and Face Landmarker float16 v1.
+Sources: https://www.npmjs.com/package/@mediapipe/tasks-vision
+https://developers.google.com/edge/mediapipe/solutions/vision/face_landmarker
+Model: https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task

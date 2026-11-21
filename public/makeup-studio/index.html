@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en-ZA">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#F7F0E9">
+<meta name="description" content="Try lipstick, blush and eye makeup on a selfie with Jeanrie’s virtual Makeup Studio.">
+<title>Makeup Studio | Jeanrie’s Beauty Playground</title>
+<link rel="icon" href="/images/jeanrie-icon.png">
+<link rel="stylesheet" href="/style.css">
+<link rel="stylesheet" href="/muse.css">
+<link rel="stylesheet" href="/nail-lab/lab.css">
+<link rel="stylesheet" href="/playground/playground.css">
+<script type="module" src="/makeup-studio/app.js"></script>
+</head>
+<body class="lab">
+<a class="skip-link" href="#main-content">Skip to content</a>
+<header class="lab-header">
+  <a href="/"><img class="signature-logo signature-header" src="/images/jeanrie-signature-320.webp" width="320" height="320" alt="Jeanrie’s Beauty Studio home"></a>
+  <a class="lab-back" href="/playground/">Beauty Playground</a>
+  <a class="pill" href="https://wa.me/27822265134">WhatsApp booking</a>
+</header>
+<main id="main-content" class="lab-main" tabindex="-1">
+  <section class="lab-intro">
+    <p class="eyebrow">VIRTUAL MAKEUP</p>
+    <h1>Makeup <em>Studio</em></h1>
+    <p>Upload a selfie, try a look, then mix or remove individual makeup layers.</p>
+  </section>
+  <div class="play-editor">
+    <section class="lab-panel lab-preview">
+      <h2>Your selfie</h2>
+      <p>Use a single front-facing selfie in even light, with eyes and lips visible. JPG, PNG or WebP, up to 15 MB.</p>
+      <div class="lab-row">
+        <label class="lab-action" for="selfie">Choose selfie</label><input class="visually-hidden" id="selfie" type="file" accept="image/jpeg,image/png,image/webp">
+        <label class="lab-action" for="selfie-camera">Take selfie</label><input class="visually-hidden" id="selfie-camera" type="file" accept="image/jpeg,image/png,image/webp" capture="user">
+      </div>
+      <div class="lab-frame" id="makeup-frame"><p id="empty-selfie">Add a selfie to start.</p><canvas id="makeup-preview" aria-label="Selfie makeup preview" hidden></canvas></div>
+      <label>Before and after split <input type="range" id="makeup-split" min="0" max="100" value="0" disabled></label>
+      <div class="lab-row"><button type="button" id="makeup-before" disabled aria-pressed="false">Show original</button><button type="button" id="delete-selfie" disabled>Delete current selfie</button></div>
+      <p class="lab-status" id="makeup-status" role="status">Your selfie stays on this device unless you share it.</p>
+    </section>
+    <section class="lab-panel">
+      <h2>Your look</h2>
+      <label>Makeup style <select id="makeup-preset"></select></label>
+      <div class="play-layers" id="makeup-layers"></div>
+      <button type="button" id="remove-makeup">Remove all makeup</button>
+      <p class="lab-note">Colours are illustrative. Remove a layer using its checkbox.</p>
+    </section>
+    <section class="lab-panel">
+      <h2>Save or share</h2>
+      <label>Look name <input id="makeup-name" maxlength="60" placeholder="My makeup look"></label>
+      <div class="lab-row">
+        <button type="button" id="save-makeup" class="lab-primary" disabled>Save on this device</button>
+        <button type="button" id="download-makeup" disabled>Download PNG</button>
+        <button type="button" id="share-makeup" disabled>Share image</button>
+      </div>
+      <p class="lab-note">Saved looks include the selfie and can be opened or deleted from your local library.</p>
+      <div class="lab-row"><a class="lab-action" href="/playground/#saved-looks">Saved looks</a><a class="lab-action" id="makeup-wa" href="https://wa.me/27822265134" target="_blank" rel="noopener noreferrer">Ask Jeanrie on WhatsApp</a></div>
+    </section>
+  </div>
+</main>
+<footer><a href="/">Jeanrie’s Beauty Studio</a></footer>
+</body>
+</html>

@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en-ZA">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#F7F0E9">
+<meta name="description" content="Design nails and makeup, get occasion inspiration, and save looks in Jeanrie’s Beauty Playground.">
+<title>Beauty Playground | Jeanrie’s Beauty Studio</title>
+<link rel="icon" href="/images/jeanrie-icon.png">
+<link rel="stylesheet" href="/style.css">
+<link rel="stylesheet" href="/muse.css">
+<link rel="stylesheet" href="/nail-lab/lab.css">
+<link rel="stylesheet" href="/playground/playground.css">
+<script type="module" src="/playground/app.js"></script>
+</head>
+<body class="lab play-hub">
+<a class="skip-link" href="#main-content">Skip to content</a>
+<header class="lab-header">
+  <a href="/"><img class="signature-logo signature-header" src="/images/jeanrie-signature-320.webp" width="320" height="320" alt="Jeanrie’s Beauty Studio home"></a>
+  <a class="lab-back" href="/">Studio home</a>
+  <a class="pill" href="https://wa.me/27822265134">WhatsApp booking</a>
+</header>
+<main id="main-content" class="lab-main" tabindex="-1">
+  <section class="lab-intro">
+    <p class="eyebrow">JEANRIE’S BEAUTY STUDIO</p>
+    <h1>Beauty <em>Playground</em></h1>
+    <p>Try a virtual look, save your favourites or plan your next studio visit. Your photos are processed on this device.</p>
+    <div class="play-intro-actions">
+      <a class="lab-action lab-primary" href="/nail-lab/">Try the Nail Lab</a>
+      <a class="lab-action lab-primary" href="/makeup-studio/">Try the Makeup Studio</a>
+      <a class="lab-action" href="#saved-looks">Open saved looks</a>
+    </div>
+  </section>
+  <nav class="play-index" aria-label="Playground sections">
+    <a href="#roulette">Roulette</a><a href="#nail-battle">Nail Battle</a><a href="#bestie">Beauty Bestie</a>
+    <a href="#passport">Passport</a><a href="#mystery-box">Mystery Box</a><a href="#outfit">Outfit Match</a>
+    <a href="#glam-wall">Glam Wall</a><a href="#countdown">Countdown</a><a href="#colour-week">Colour of the Week</a>
+    <a href="#gifts">Gift Cards</a><a href="#tutorials">Tutorials</a><a href="#reveal">Before &amp; After</a>
+  </nav>
+  <section class="lab-panel play-module" id="saved-looks">
+    <h2>Saved looks</h2>
+    <p>Looks from both studios stay in this browser. Use Delete to remove a look and its photo.</p>
+    <ul class="play-library" id="look-library"></ul>
+    <p role="status" id="library-status"></p>
+  </section>
+  <div class="play-sections">
+    <section class="lab-panel play-module" id="roulette">
+      <h2>Beauty Roulette</h2>
+      <p>Spin for a coordinated nail and makeup look.</p>
+      <button type="button" id="spin-look">Spin for a look</button>
+      <div class="play-result" id="roulette-result"></div>
+    </section>
+    <section class="lab-panel play-module" id="nail-battle">
+      <h2>Nail Battle</h2>
+      <p>Save two Nail Lab designs to compare them side by side.</p>
+      <div class="lab-grid">
+        <label>First design <select id="battle-a"></select></label>
+        <label>Second design <select id="battle-b"></select></label>
+      </div>
+      <div class="lab-row"><button type="button" id="compare-nails">Compare</button><button type="button" id="share-battle" disabled>Share comparison</button></div>
+      <p role="status" id="battle-status"></p>
+      <div class="play-frame"><canvas class="play-canvas" id="battle-preview" aria-label="Two nail designs side by side" hidden></canvas></div>
+    </section>
+    <section class="lab-panel play-module" id="bestie">
+      <h2>Beauty Bestie</h2>
+      <p>Choose what you’re getting ready for and get a studio look suggestion.</p>
+      <div class="lab-grid">
+        <label>Occasion <select id="bestie-event"><option>Everyday</option><option>Work</option><option>Wedding</option><option>Celebration</option></select></label>
+        <label>Your style <select id="bestie-style"><option>Natural</option><option>Romantic</option><option>Bold</option></select></label>
+        <label>Time available <select id="bestie-time"><option value="quick">15 minutes</option><option value="long">An hour or more</option></select></label>
+      </div>
+      <button type="button" id="bestie-plan">Suggest a look</button>
+      <div class="play-result" id="bestie-result"></div>
+    </section>
+    <section class="lab-panel play-module" id="passport">
+      <h2>Beauty Passport</h2>
+      <p>Track a personal visit goal. Ask Jeanrie about official rewards.</p>
+      <div class="lab-grid">
+        <label>Your visit goal <input type="number" id="passport-goal" min="1" max="30" value="5"></label>
+        <label>Reward you’d like <input id="passport-reward" maxlength="60" placeholder="e.g. nail art accent"></label>
+      </div>
+      <progress id="passport-progress" max="5" value="0" aria-label="Visit progress"></progress>
+      <p id="passport-count" role="status"></p>
+      <div class="lab-row"><button type="button" id="add-visit">Log a visit</button><button type="button" id="reset-visits">Reset visits</button></div>
+      <a id="passport-wa" class="lab-action" href="https://wa.me/27822265134">Ask about rewards</a>
+    </section>
+    <section class="lab-panel play-module" id="mystery-box">
+      <h2>Mystery Beauty Box</h2>
+      <p>Reveal up to three finds from Jeanrie’s current Justine catalogue.</p>
+      <label>Product category <select id="box-category"><option value="">Surprise me</option></select></label>
+      <button type="button" id="open-box">Reveal box</button>
+      <div class="play-result" id="box-result"></div>
+    </section>
+    <section class="lab-panel play-module" id="outfit">
+      <h2>Match My Outfit</h2>
+      <p>Upload a close-up of the fabric. The Lab samples the central colours and suggests nail and makeup accents.</p>
+      <label class="lab-action" for="outfit-photo">Choose outfit photo</label><input class="visually-hidden" id="outfit-photo" type="file" accept="image/jpeg,image/png,image/webp">
+      <p role="status" id="outfit-status"></p>
+      <div class="play-result" id="outfit-result"></div>
+    </section>
+    <section class="lab-panel play-module play-gallery" id="glam-wall">
+      <h2>Glam Wall</h2>
+      <div class="play-wall" id="public-glam-wall"><p>Loading approved looks…</p></div>
+      <p>Prepare a look for Jeanrie to review. Permission to send a photo for review is separate from permission to publish it.</p>
+      <label>Saved look <select id="glam-look"></select></label>
+      <label><input type="checkbox" id="glam-consent"> I have permission to share this photo with Jeanrie for review.</label>
+      <div class="lab-row"><button type="button" id="prepare-glam" disabled>Download review image</button><a class="lab-action" id="glam-wa" href="https://wa.me/27822265134" hidden>Ask Jeanrie to review</a></div>
+      <p role="status" id="glam-status"></p>
+    </section>
+    <section class="lab-panel play-module" id="countdown">
+      <h2>Beauty Countdown</h2>
+      <label>Event name <input id="event-name" maxlength="60" placeholder="My event"></label>
+      <label>Event date <input id="event-date" type="date"></label>
+      <div class="lab-row"><button type="button" id="plan-event">Build countdown</button><button type="button" id="clear-event">Clear event</button></div>
+      <div class="play-result" id="event-plan"></div>
+    </section>
+    <section class="lab-panel play-module" id="colour-week">
+      <h2>Colour of the Week</h2>
+      <p>Discover a shade from the verified Nail Lab palette.</p>
+      <div class="play-result" id="weekly-shade"></div>
+    </section>
+    <section class="lab-panel play-module" id="gifts">
+      <h2>Digital Gift Cards</h2>
+      <p>Tell Jeanrie who the gift is for and what you have in mind.</p>
+      <label>Gift for <input id="gift-name" maxlength="60"></label>
+      <label>Amount in rand <input id="gift-amount" type="number" min="1" max="100000" step="1"></label>
+      <label>Gift message <textarea id="gift-message" maxlength="150" rows="3"></textarea></label>
+      <a class="lab-action" id="gift-wa" href="https://wa.me/27822265134" target="_blank" rel="noopener noreferrer">Enquire about a gift card</a>
+      <p class="lab-note">Jeanrie confirms availability, payment and issuance.</p>
+    </section>
+    <section class="lab-panel play-module" id="tutorials">
+      <h2>Mini Beauty Tutorials</h2>
+      <label>Lesson <select id="lesson"></select></label>
+      <p id="lesson-step" role="status"></p>
+      <div class="lab-row"><button type="button" id="lesson-prev">Previous</button><button type="button" id="lesson-next">Next step</button></div>
+      <a class="lab-action" id="lesson-studio" href="/nail-lab/">Practise in the studio</a>
+    </section>
+    <section class="lab-panel play-module" id="reveal">
+      <h2>Before &amp; After Reveal</h2>
+      <label>Saved look <select id="reveal-look"></select></label>
+      <button type="button" id="show-reveal">Open comparison</button>
+      <label>Original image coverage <input id="reveal-split" type="range" min="0" max="100" value="50" disabled></label>
+      <div class="play-frame"><canvas class="play-canvas" id="reveal-preview" aria-label="Before and after photo comparison" hidden></canvas></div>
+      <div class="lab-row"><button type="button" id="download-reveal" disabled>Download reveal</button><button type="button" id="share-reveal" disabled>Share reveal</button></div>
+      <p role="status" id="reveal-status"></p>
+    </section>
+  </div>
+  <section class="lab-panel play-module">
+    <h2>More from Jeanrie</h2>
+    <div class="lab-row"><a class="lab-action" href="/experience#finder">Beauty Finder</a><a class="lab-action" href="/experience#builder">Pamper Plan</a><a class="lab-action" href="/concierge#shop">Justine catalogue</a><a class="lab-action" href="/concierge#book">Appointment enquiries</a></div>
+  </section>
+</main>
+<footer><a href="/">Jeanrie’s Beauty Studio</a></footer>
+</body>
+</html>
