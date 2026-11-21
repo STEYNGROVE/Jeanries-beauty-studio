@@ -99,3 +99,8 @@ body .hero .vase { background: linear-gradient(100deg, #f0dcbc, var(--gold)); }
 body .hero .stem { background: #627251; }
 body .hero .flower { color: var(--plum); }
 body .shop-controls input::placeholder { color: #664b62; }
+body #about > p:not(.eyebrow) { color: #564253; }
+body .experience-section h2 em,
+body .result-panel h3,
+body .plan-summary h3,
+body .shop .product .category { color: var(--plum); }
