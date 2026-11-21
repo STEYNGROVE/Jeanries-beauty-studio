@@ -63,6 +63,7 @@
     }
     for (const product of matches) {
       const card = element('article', '', 'commerce-card');
+      card.id = 'product-' + product.id;
       const placeholder = () => {
         const art = element('div', '', 'product-category-art');
         const monogram = element('span', 'J', 'media-monogram');
@@ -168,6 +169,10 @@
     renderBasket();
     renderProducts();
     scheduleDealRefresh();
+    if (location.hash.startsWith('#product-')) {
+      const product = byId(location.hash.slice(1));
+      (product || byId('shop')).scrollIntoView({ block: 'start' });
+    }
   }).catch(() => {
     status.textContent = 'The online catalogue is unavailable. Use the Justine catalogue links below or ask Jeanrie on WhatsApp.';
   });
