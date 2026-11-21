@@ -19,7 +19,7 @@ export async function decodePhoto(file, validate = true) {
     canvas.width=Math.round(source.width*ratio);canvas.height=Math.round(source.height*ratio);
     canvas.getContext('2d').drawImage(source,0,0,canvas.width,canvas.height);
     const blob=await blobFromCanvas(canvas, 'image/webp', .93);
-    return {bitmap:await createImageBitmap(blob),blob};
+    return {bitmap:await createImageBitmap(canvas),blob};
   } finally { source.close(); }
 }
 

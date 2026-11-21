@@ -79,9 +79,9 @@ function pattern(ctx, design) {
   }
 }
 
-function texture(design) {
+function texture(design, rounded) {
   t.setTransform(1,0,0,1,0,0); t.clearRect(0,0,96,96);
-  t.save(); t.scale(96,96); t.clip(shape);
+  t.save(); t.scale(96,96); if (rounded) t.clip(shape);
   t.fillStyle=design.colour; t.fillRect(0,0,1,1);
   t.save(); pattern(t,design); t.restore();
   const light=t.createLinearGradient(0,0,1,.31);
@@ -153,7 +153,13 @@ function triangle(ctx, a,b,c, u,v,w) {
 }
 
 function paintNail(ctx, nail) {
-  texture(nail.design);
+  texture(nail.design, !nail.mask);
+  ctx.save();
+  if (nail.mask) {
+    const bounds = new Path2D();
+    for (const row of nail.mask) bounds.rect(...row);
+    ctx.clip(bounds);
+  }
   const steps=6;
   for(let x=0;x<steps;x++) for(let y=0;y<steps;y++) {
     const coords=[[x,y],[x+1,y],[x+1,y+1],[x,y+1]];
@@ -161,6 +167,7 @@ function paintNail(ctx, nail) {
     const [u,v,w,z]=coords.map(([qx,qy])=>({x:qx*96/steps,y:qy*96/steps}));
     triangle(ctx,a,b,c,u,v,w); triangle(ctx,a,c,d,u,w,z);
   }
+  ctx.restore();
 }
 
 const overlay = document.createElement('canvas');

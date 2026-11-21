@@ -1,0 +1,11 @@
+Nail segmentation model
+Upstream: https://github.com/austingg/finger-nail-seg/tree/2cb37309fdea69de4fcc25cbbe1a1baf5e4b5d25
+The repository provides GPL-3.0 terms and the ONNX model metadata identifies
+Ultralytics YOLOv8s-seg and AGPL-3.0. Both notices are included here.
+This version packs large constant weights as float16 and casts them to
+float32 inside the graph. The conversion source is scripts/compact-nail-model.cjs.
+The original ONNX and upstream source are available at the link above.
+
+ONNX Runtime Web 1.31.1
+Copyright Microsoft Corporation. MIT license included.
+Source: https://github.com/microsoft/onnxruntime

@@ -48,3 +48,14 @@
 #camera-video { display: block; width: 100%; max-height: 55vh; border-radius: .75rem; background: #392736; }
 .lab-preview-link { text-decoration: underline; text-underline-offset: .18em; }
 .lab-panel input.visually-hidden { width: 1px; height: 1px; min-height: 0; padding: 0; border: 0; }
+.lab-adjustments > details { margin: 0; }
+.lab-adjustments summary { color: var(--plum); }
+.lab-adjustments #boundary-controls summary { font-weight: 550; }
+.lab-panel:has(#scan-again:not([hidden])) #scan-again { margin-top: .8rem; }
+.lab-auto #apply, .lab-auto #apply-all, .lab-auto #select-side { display: none; }
+@media (min-width: 960px) {
+  .lab-preview { grid-row: 1 / span 2; }
+  .lab-workspace > section:not(.lab-preview) { grid-column: 2; }
+}
+
+.lab-action[hidden] { display: none; }

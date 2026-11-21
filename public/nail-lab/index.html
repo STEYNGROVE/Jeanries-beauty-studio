@@ -23,12 +23,12 @@
   <section class="lab-intro" aria-labelledby="lab-title">
     <p class="eyebrow">JEANRIE’S BEAUTY STUDIO</p>
     <h1 id="lab-title">Funky Nail <em>Lab</em></h1>
-    <p>Try colour and nail art on your own photo, one nail at a time.</p>
+    <p>Add a photo. The Lab finds visible nails so you can try colours and styles straight away.</p>
   </section>
   <div class="lab-workspace">
     <section class="lab-panel lab-preview" aria-labelledby="photo-title">
       <h2 id="photo-title">Your photo</h2>
-      <p id="photo-help">Use bright, even light. Photograph the nails from above with fingers or toes apart and the whole nail visible. JPG, PNG or WebP, up to 15 MB.</p>
+      <p id="photo-help">Use bright, even light and take the photo from above. Keep fingers or toes apart with each nail visible. JPG, PNG or WebP, up to 15 MB.</p>
       <div class="lab-row">
         <label class="lab-action" for="upload">Choose photo</label>
         <input class="visually-hidden" id="upload" type="file" accept="image/jpeg,image/png,image/webp" aria-describedby="photo-help">
@@ -42,11 +42,12 @@
       </div>
       <label for="area">Treatment area</label>
       <select id="area">
+        <option value="unspecified">Confirm with Jeanrie</option>
         <option value="left-hand">Left hand</option><option value="right-hand">Right hand</option><option value="both-hands">Both hands</option>
         <option value="left-foot">Left foot</option><option value="right-foot">Right foot</option><option value="both-feet">Both feet</option>
       </select>
       <div id="preview-frame" class="lab-frame">
-        <p id="empty-photo">Add a photo to start mapping nails.</p>
+        <p id="empty-photo">Add a photo to try on nail colours.</p>
         <canvas id="preview" width="800" height="650" aria-label="Nail design preview" hidden></canvas>
       </div>
       <div class="lab-row">
@@ -64,46 +65,12 @@
           <label>Crop ratio <select id="crop"><option value="photo">Original</option><option value="square">Square</option><option value="portrait">Portrait 4:5</option><option value="landscape">Landscape 5:4</option></select></label>
         </div>
       </details>
+      <button type="button" id="scan-again" hidden>Find nails again</button>
+      <a class="lab-action lab-primary" id="choose-styles" href="#art-title" hidden>Choose colours and styles</a>
       <p class="lab-status" role="status" id="lab-status">Your photo stays in this browser unless you choose to share it.</p>
     </section>
 
-    <section class="lab-panel" aria-labelledby="map-title">
-      <h2 id="map-title">Map your nails</h2>
-      <p>Tap a nail to place its outline. Drag the four corners to fit it, or adjust the measurements below. Place the first edge at the tip. Use one photo that shows both sides when mapping both hands or feet.</p>
-      <p class="lab-note">Mapping is manual. The studio does not detect nails automatically.</p>
-      <div class="lab-grid">
-        <label>Nail to map or copy from <select id="active-nail"></select></label>
-        <button type="button" id="place" aria-pressed="false">Place on photo</button>
-        <button type="button" id="centre">Add at centre</button>
-        <button type="button" id="remove-nail">Remove mapped nail</button>
-      </div>
-      <details id="boundary-controls">
-        <summary>Adjust active nail with the keyboard</summary>
-        <div class="lab-grid">
-          <label>Horizontal centre (%) <input id="nail-x" type="number" min="0" max="100" step=".1"></label>
-          <label>Vertical centre (%) <input id="nail-y" type="number" min="0" max="100" step=".1"></label>
-          <label>Width (% of photo) <input id="nail-w" type="number" min="1" max="60" step=".1"></label>
-          <label>Height (% of photo) <input id="nail-h" type="number" min="1" max="60" step=".1"></label>
-          <label>Angle (degrees) <input id="nail-angle" type="number" min="-180" max="180" step="1"></label>
-        </div>
-        <button type="button" id="adjust-nail">Apply boundary settings</button>
-      </details>
-      <fieldset>
-        <legend>Apply designs to</legend>
-        <div class="lab-nails" id="nail-list"></div>
-        <div class="lab-row">
-          <button type="button" id="select-active">Active nail only</button>
-          <button type="button" id="select-side">Active side</button>
-          <button type="button" id="select-all">All mapped nails</button>
-        </div>
-      </fieldset>
-      <div class="lab-row">
-        <button type="button" id="copy">Copy active design to selection</button>
-        <button type="button" id="undo">Undo</button>
-        <button type="button" id="redo">Redo</button>
-        <button type="button" id="reset-art">Reset nail colours</button>
-      </div>
-    </section>
+
 
     <section class="lab-panel" aria-labelledby="art-title">
       <h2 id="art-title">Colour and nail art</h2>
@@ -113,7 +80,7 @@
         <label>Colour category <select id="category"><option value="">All categories</option></select></label>
         <label>Supplier finish <select id="shade-finish"><option value="">All finishes</option></select></label>
       </div>
-      <p class="lab-note">Changes preview on selected nails. Choose Apply to keep them. <a class="lab-preview-link" href="#photo-title">Back to preview</a>.</p>
+      <p class="lab-note">Colours and styles apply instantly to detected nails. <a class="lab-preview-link" href="#photo-title">Back to preview</a>.</p>
       <p class="lab-note">Swatches and photo overlays are illustrative. Ask Jeanrie to confirm colour and studio stock.</p>
       <div id="shades" class="lab-swatches" aria-label="Colour swatches"></div>
       <p id="shade-info" role="status">Custom colour</p>
@@ -168,6 +135,44 @@
       <a id="whatsapp" class="lab-action lab-primary" href="https://wa.me/27822265134" target="_blank" rel="noopener noreferrer">Enquire on WhatsApp</a>
       <p class="lab-note">Download the design and attach it in WhatsApp, or use your phone’s share menu if supported. Jeanrie confirms appointments separately.</p>
       <p class="lab-note">Saving stores the photo and design in this browser. Delete saved designs separately to remove their photos. Replace the current photo without changing any saved design.</p>
+    </section>
+    <section class="lab-panel lab-adjustments" aria-labelledby="map-title">
+      <details id="advanced-nails"><summary id="map-title">Nail selection and placement</summary>
+      <p>Tap a nail to place its outline. Drag the four corners to fit it, or adjust the measurements below. Place the first edge at the tip. Use one photo that shows both sides when mapping both hands or feet.</p>
+      <p class="lab-note">All detected nails are selected by default. Fine-tune placement or select individual nails here.</p>
+      <div class="lab-grid">
+        <label>Nail to map or copy from <select id="active-nail"></select></label>
+        <button type="button" id="place" aria-pressed="false">Place on photo</button>
+        <button type="button" id="centre">Add at centre</button>
+        <button type="button" id="remove-nail">Remove mapped nail</button>
+      </div>
+      <details id="boundary-controls">
+        <summary>Adjust active nail with the keyboard</summary>
+        <div class="lab-grid">
+          <label>Horizontal centre (%) <input id="nail-x" type="number" min="0" max="100" step=".1"></label>
+          <label>Vertical centre (%) <input id="nail-y" type="number" min="0" max="100" step=".1"></label>
+          <label>Width (% of photo) <input id="nail-w" type="number" min="1" max="60" step=".1"></label>
+          <label>Height (% of photo) <input id="nail-h" type="number" min="1" max="60" step=".1"></label>
+          <label>Angle (degrees) <input id="nail-angle" type="number" min="-180" max="180" step="1"></label>
+        </div>
+        <button type="button" id="adjust-nail">Apply boundary settings</button>
+      </details>
+      <fieldset>
+        <legend>Apply designs to</legend>
+        <div class="lab-nails" id="nail-list"></div>
+        <div class="lab-row">
+          <button type="button" id="select-active">Active nail only</button>
+          <button type="button" id="select-side">Active side</button>
+          <button type="button" id="select-all">All mapped nails</button>
+        </div>
+      </fieldset>
+      <div class="lab-row">
+        <button type="button" id="copy">Copy active design to selection</button>
+        <button type="button" id="undo">Undo</button>
+        <button type="button" id="redo">Redo</button>
+        <button type="button" id="reset-art">Reset nail colours</button>
+      </div>
+      </details>
     </section>
   </div>
 </main>
