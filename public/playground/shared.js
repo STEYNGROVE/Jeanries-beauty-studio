@@ -56,10 +56,13 @@ export async function shareCanvas(canvas, title, filename) {
 export function styleParams() {
   const query = new URLSearchParams(location.search);
   const key = query.get('look');
-  const tint = query.get('tint');
+  const tint = query.get('tint'), colour = query.get('colour'), apply = query.get('apply');
   return {
     look: key && Object.hasOwn(looks,key) ? looks[key] : null,
     tint: /^#[0-9a-f]{6}$/i.test(tint || '') ? tint : null,
+    colour: /^#[0-9a-f]{6}$/i.test(colour || '') ? colour : null,
+    layer: ['lips','eyes','cheeks'].includes(query.get('layer')) ? query.get('layer') : 'lips',
+    apply: ['all','selected'].includes(apply) ? apply : null,
   };
 }
 

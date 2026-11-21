@@ -50,7 +50,10 @@ export async function designStore(mode, operation) {
 }
 
 export function readList(key) {
-  try { return JSON.parse(localStorage.getItem('jeanrie-nail-'+key)) || []; }
+  try {
+    const value=JSON.parse(localStorage.getItem('jeanrie-nail-'+key));
+    return Array.isArray(value)?value.filter(item=>item&&typeof item==='object'):[];
+  }
   catch { return []; }
 }
 

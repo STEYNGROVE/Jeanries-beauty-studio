@@ -1,4 +1,5 @@
 import { patterns, centre, rectangle, validQuad, draw } from './paint.js';
+import { customNails } from './palette.js';
 import { savedLooks, styleParams } from '/playground/shared.js';
 import { detectNails } from './detect.js';
 import { decodePhoto, blobFromCanvas, designStore, readList, writeList } from './storage.js';
@@ -17,18 +18,18 @@ let undo=[],redo=[],drag=null,matrix=null,shade=null,previewDraft=false,drawFram
 let detection=null,scanning=false,canRetry=false,hasChosenStyle=false;
 let recent=readList('recent'),favourites=readList('favourites'),catalogue=[];
 const credit=(name,colour,category)=>({name,colour,category,brand:'Custom',finish:'Unspecified'});
-const customs=[
-  credit('Dusty rose','#d9a5b5','Pink'),credit('Muse plum','#653b60','Purple'),credit('Soft sage','#b8c6a4','Green'),
-  credit('Champagne gold','#c4a36a','Gold'),credit('Ivory','#f7f0e9','Cream'),credit('Midnight teal','#225e65','Blue'),
-];
+const customs=customNails;
 for(const [key,name] of Object.entries(patterns)) $('pattern').add(new Option(name,key));
 const incoming=styleParams();
+let pendingSelection=incoming.apply==='selected' && !!(incoming.colour||incoming.look);
 if(incoming.look) {
   const {colour,accent,pattern,finish}=incoming.look;
   $('colour').value=colour;$('accent').value=incoming.tint||accent;
   $('pattern').value=pattern;$('finish').value=finish;hasChosenStyle=true;
 }
 
+
+if(incoming.colour){$('colour').value=incoming.colour;hasChosenStyle=true;showShade();}
 
 function nailsFor() {
   if(state.auto)return Array.from({length:state.auto},(_,i)=>({id:'visible-'+i,name:'Nail '+(i+1)}));
@@ -129,6 +130,9 @@ function refresh() {
   $('place').setAttribute('aria-pressed',String(place));$('before').setAttribute('aria-pressed',String(before));
   $('before').textContent=before?'Show edited design':'Show original photo';
   document.body.classList.toggle('lab-auto',!!state.auto);
+  document.body.classList.toggle('lab-selecting',pendingSelection);
+  $('choose-styles').href=pendingSelection?'#advanced-nails':'#art-title';
+  $('choose-styles').textContent=pendingSelection?'Choose nails to paint':'Choose colours and styles';
   $('scan-again').hidden=!photo||!canRetry||scanning;
   $('choose-styles').hidden=!state.auto;
   $('preview-frame').setAttribute('aria-busy',String(scanning));
@@ -155,7 +159,7 @@ async function load(file) {
     state=empty(state.area);undo=[];redo=[];selection.clear();before=false;place=false;previewDraft=false;
     $('advanced-nails').open=false;
     await scanPhoto();
-  } catch(error){if(token===fileVersion)say(error.message);}
+  } catch(error){if(token===fileVersion){refresh();say(error.message);}}
 }
 function stopDetection() {
   detection?.abort();
@@ -178,10 +182,12 @@ async function scanPhoto() {
     found.sort((a,b)=>a.centre.x-b.centre.x);
     state.auto=found.length;
     state.nails=Object.fromEntries(found.map((nail,i)=>['visible-'+i,{
-      points:nail.points,mask:nail.mask,design:hasChosenStyle?design():null,
+      points:nail.points,mask:nail.mask,design:hasChosenStyle&&!pendingSelection?design():null,
     }]));
-    active='visible-0';selection=new Set(Object.keys(state.nails));undo=[];redo=[];
-    say(found.length+(found.length===1?' nail found.':' nails found.')+' Choose a colour or style.');
+    active='visible-0';selection=new Set(pendingSelection?[]:Object.keys(state.nails));undo=[];redo=[];
+    if(pendingSelection)$('advanced-nails').open=true;
+    say(found.length+(found.length===1?' nail found.':' nails found.')+
+      (pendingSelection?' Choose nails, then Apply to selected nails.':' Choose a colour or style.'));
   } catch {
     if(controller.signal.aborted)return;
     canRetry=true;
@@ -314,7 +320,12 @@ on('copy','click',()=>change(()=>{
 on('undo','click',()=>{if(undo.length){redo.push(clone(state));state=undo.pop();previewDraft=false;refresh();}});
 on('redo','click',()=>{if(redo.length){undo.push(clone(state));state=redo.pop();previewDraft=false;refresh();}});
 on('reset-art','click',()=>change(()=>{for(const nail of Object.values(state.nails))nail.design=null;}));
-on('clear-design','click',()=>{change(()=>{state=empty(state.area);selection.clear();});say('Current design cleared.');});
+on('clear-design','click',()=>{
+  stopDetection();
+  change(()=>{state=empty(state.area);selection.clear();});
+  canRetry=!!photo;refresh();
+  say(photo?'Current design cleared. Use Find nails again to restart from this photo.':'Current design cleared.');
+});
 on('notes','input',updateSummary);
 
 function showShade() {
@@ -357,7 +368,7 @@ function palette() {
 for(const id of ['brand','category','shade-finish','shade-search'])on(id,id==='shade-search'?'input':'change',palette);
 function draftChanged() {
   hasChosenStyle=true;previewDraft=true;before=false;showShade();
-  if(state.auto&&selection.size) {
+  if(state.auto&&selection.size&&!pendingSelection) {
     const next=design();
     change(()=>{for(const id of selection)state.nails[id].design=clone(next);});
   } else refresh();
@@ -372,7 +383,7 @@ function apply(ids) {
   change(()=>{for(const id of ids)state.nails[id].design=clone(colour);});
   before=false;say('Applied design to '+ids.length+(ids.length===1?' nail.':' nails.'));refresh();
 }
-on('apply','click',()=>apply([...selection]));
+on('apply','click',()=>{pendingSelection=false;apply([...selection]);});
 on('apply-all','click',()=>apply(Object.keys(state.nails)));
 
 const looks={muse:[['#653b60','solid'],['#d9a5b5','floral'],['#b8c6a4','colourFrench']],
@@ -401,7 +412,7 @@ async function saveDesign(copy) {
 }
 on('save','click',()=>saveDesign(false));
 on('save-copy','click',()=>saveDesign(true));
-on('restore','click',async()=>{
+async function restoreDesign(fromRoulette=false) {
   if(!$('saved').value){say('Choose a saved design first.');return;}
   try {
     stopDetection();
@@ -412,9 +423,18 @@ on('restore','click',async()=>{
     if(token!==fileVersion){bitmap.close();return;}
     photo?.close();photo=bitmap;photoBlob=record.photo;state=record.state;loadedId=record.id;matrix=null;
     $('design-name').value=record.name;$('notes').value=record.notes||'';
-    undo=[];redo=[];selection=new Set(state.auto?Object.keys(state.nails):[]);before=false;place=false;previewDraft=false;refresh();say('Saved design opened.');
+    undo=[];redo=[];selection=new Set(state.auto?Object.keys(state.nails):[]);before=false;place=false;previewDraft=false;
+    if(fromRoulette&&incoming.apply==='all'){
+      apply(Object.keys(state.nails));
+    } else {
+      if(fromRoulette&&pendingSelection){
+        selection.clear();$('advanced-nails').open=true;say('Saved design opened. Choose nails, then Apply to selected nails.');
+      } else say('Saved design opened.');
+      refresh();
+    }
   } catch {say('This saved design could not be opened.');}
-});
+}
+on('restore','click',()=>restoreDesign());
 on('delete-saved','click',async()=>{
   const id=$('saved').value;if(!id){say('Choose a saved design first.');return;}
   try {await designStore('readwrite',store=>store.delete(id));if(loadedId===id)loadedId=null;await updateList();say('Saved design deleted from this browser.');}
@@ -440,7 +460,7 @@ on('share','click',async()=>{
   }catch(error){if(error.name!=='AbortError')say('Sharing did not complete. Download the image and attach it manually.');}
 });
 
-fetch('/data/nail-shades.json').then(response=>{
+const paletteReady=fetch('/data/nail-shades.json').then(response=>{
   if(!response.ok)throw Error();
   return response.json();
 }).then(data=>{
@@ -455,11 +475,11 @@ fetch('/data/nail-shades.json').then(response=>{
   if(incomingShade)pick(incomingShade);
   palette();
 }).catch(()=>{palette();say('Supplier palette unavailable. Custom colours still work.');});
-updateList().then(()=>{
+Promise.all([updateList(),paletteReady]).then(()=>{
   const id=new URLSearchParams(location.search).get('saved');
   if(!id)return;
   $('saved').value=id;
-  if($('saved').value)$('restore').click();
+  if($('saved').value)return restoreDesign(!!incoming.apply);
   else say('This look is unavailable in this browser.');
 }).catch(()=>say('Local design storage is unavailable in this browser.'));
 

@@ -8,6 +8,7 @@ const params=styleParams();
 let photo=null, blob=null, landmarks=[], loaded=null, job=0, original=false, frame=0, detector;
 let preset=params.look?.makeup||'muse', layers=structuredClone(presets[preset].layers);
 if(params.tint)layers.eyes.colour=params.tint;
+if(params.colour)layers[params.layer].colour=params.colour;
 const canvas=$('makeup-preview'), layerFields={};
 
 async function findFace(bitmap) {

@@ -44,11 +44,34 @@
     <p role="status" id="library-status"></p>
   </section>
   <div class="play-sections">
-    <section class="lab-panel play-module" id="roulette">
-      <h2>Beauty Roulette</h2>
-      <p>Spin for a coordinated nail and makeup look.</p>
-      <button type="button" id="spin-look">Spin for a look</button>
-      <div class="play-result" id="roulette-result"></div>
+    <section class="lab-panel play-module roulette-module" id="roulette" aria-labelledby="roulette-title">
+      <h2 id="roulette-title">Colour Roulette</h2>
+      <div class="roulette-layout">
+        <div class="roulette-visual">
+          <div class="roulette-pointer" aria-hidden="true"></div>
+          <div class="roulette-wheel" id="roulette-wheel" aria-hidden="true"><span></span></div>
+        </div>
+        <div class="roulette-controls">
+          <label>Wheel category
+            <select id="roulette-category">
+              <option value="looks">Coordinated beauty looks</option>
+              <option value="nails">All nail colours</option>
+              <option value="crystal">Crystal Clawz</option>
+              <option value="gel">Maskscara Gel-It</option>
+              <option value="justine">Justine makeup shades</option>
+              <option value="lips">Lipstick colours</option>
+              <option value="eyes">Eyeshadow colours</option>
+              <option value="cheeks">Blush colours</option>
+            </select>
+          </label>
+          <p class="lab-note" id="roulette-pool"></p>
+          <button type="button" class="lab-primary" id="spin-look" aria-describedby="roulette-pool">Spin the wheel</button>
+          <p class="lab-status" id="roulette-status" role="status"></p>
+          <div class="play-result" id="roulette-result" hidden></div>
+          <details><summary>Colours on this wheel</summary><ol class="roulette-legend" id="roulette-legend"></ol></details>
+          <details><summary>Saved roulette colours</summary><div class="lab-row" id="roulette-saved"></div></details>
+        </div>
+      </div>
     </section>
     <section class="lab-panel play-module" id="nail-battle">
       <h2>Nail Battle</h2>

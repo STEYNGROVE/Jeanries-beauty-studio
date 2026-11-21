@@ -1,4 +1,5 @@
 import { decodePhoto, blobFromCanvas } from '/nail-lab/storage.js';
+import { mountRoulette } from './roulette.js';
 import { draw } from '/nail-lab/paint.js';
 import { renderFace } from '/makeup-studio/render.js';
 import { deleteLook, download, looks, savedLook, savedLooks, shareCanvas, studioLinks, wa } from './shared.js';
@@ -8,7 +9,6 @@ const on=(id,type,handler)=>$(id).addEventListener(type,handler);
 const say=(id,text)=>$(id).textContent=text;
 const element=(tag,text)=>{const node=document.createElement(tag);if(text)node.textContent=text;return node;};
 const random=length=>Math.floor(Math.random()*length);
-const pick=rows=>rows[random(rows.length)];
 const buttons=(root, links)=>{
   const row=element('div');row.className='lab-row';
   for(const [text,href] of links){const a=element('a',text);a.href=href;a.className='lab-action';row.append(a);}
@@ -27,11 +27,7 @@ function localWrite(key,value) {
 }
 
 const lookKeys=Object.keys(looks);
-let lastSpin='';
-on('spin-look','click',()=>{
-  lastSpin=pick(lookKeys.filter(key=>key!==lastSpin));
-  renderSuggestion('roulette-result',lastSpin,'Your spin: '+looks[lastSpin].name+'.');
-});
+mountRoulette();
 
 function selectRows(id,rows) {
   const control=$(id), current=control.value;

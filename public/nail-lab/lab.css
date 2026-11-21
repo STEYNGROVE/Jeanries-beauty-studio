@@ -59,3 +59,4 @@
 }
 
 .lab-action[hidden] { display: none; }
+.lab-auto.lab-selecting #apply { display: inline-block; }

@@ -32,3 +32,21 @@
 .play-wall figure { margin: 0 0 .8rem; }
 .play-wall img { display: block; max-width: 100%; height: auto; border-radius: .65rem; }
 .play-wall figcaption { margin-block: .35rem; }
+.roulette-module { grid-column: 1 / -1; }
+.roulette-layout { display: grid; grid-template-columns: minmax(0,1.08fr) minmax(0,1fr); gap: clamp(1rem,4vw,2.7rem); align-items: start; }
+.roulette-visual { width: min(100% - 1rem, 29rem); aspect-ratio: 1; margin: .85rem auto 0; position: relative; }
+.roulette-wheel { width: 100%; height: 100%; border: clamp(5px,1.4vw,10px) solid #653b60; border-radius: 50%; background: conic-gradient(#d9a5b5 0 90deg,#b8c6a4 90deg 180deg,#c4a36a 180deg 270deg,#f7f0e9 270deg); box-shadow: 0 12px 34px #39273625,inset 0 0 0 2px #fffaf7; display: grid; place-items: center; }
+.roulette-wheel span { border-radius: 50%; width: 14%; aspect-ratio: 1; background: #f7f0e9; border: 3px solid #653b60; box-shadow: 0 0 0 2px #fffaf7; }
+.roulette-pointer { position: absolute; z-index: 1; left: 50%; top: -.65rem; transform: translateX(-50%); width: 0; height: 0; border: 1rem solid transparent; border-top: 1.75rem solid #392736; filter: drop-shadow(0 2px 1px #fffaf7); }
+.roulette-controls { min-width: 0; }
+.roulette-legend { display: grid; gap: .4rem; padding-inline-start: 1.5rem; }
+.roulette-legend li { padding-inline-start: .1rem; }
+#roulette-result { background: #f7f0e9; border: 1px solid #c4a36a; border-radius: .8rem; padding: 1rem; }
+#roulette-result h3 { margin: 0; }
+#roulette-result .play-chip { width: 1.6rem; height: 1.6rem; }
+#roulette-result label { margin-block: .7rem; }
+#roulette-share { margin-top: .55rem; }
+@media(max-width: 760px) {
+  .roulette-layout { grid-template-columns: minmax(0,1fr); }
+  .roulette-visual { width: min(100% - 1rem, 23rem); }
+}
