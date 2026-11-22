@@ -32,11 +32,27 @@
       <p>Use a single front-facing selfie in even light, with eyes and lips visible. JPG, PNG or WebP, up to 15 MB.</p>
       <div class="lab-row">
         <label class="lab-action" for="selfie">Choose selfie</label><input class="visually-hidden" id="selfie" type="file" accept="image/jpeg,image/png,image/webp">
-        <label class="lab-action" for="selfie-camera">Take selfie</label><input class="visually-hidden" id="selfie-camera" type="file" accept="image/jpeg,image/png,image/webp" capture="user">
+        <button type="button" id="selfie-live">Take selfie</button><label class="lab-action" for="selfie-camera">Open device camera</label><input class="visually-hidden" id="selfie-camera" type="file" accept="image/jpeg,image/png,image/webp" capture="user">
+      </div>
+      <div id="selfie-camera-preview" hidden>
+        <video id="selfie-video" autoplay playsinline muted aria-label="Live selfie camera"></video>
+        <div class="lab-row"><button type="button" id="selfie-capture">Capture selfie</button><button type="button" id="selfie-camera-close">Close camera</button></div>
       </div>
       <div class="lab-frame" id="makeup-frame"><p id="empty-selfie">Add a selfie to start.</p><canvas id="makeup-preview" aria-label="Selfie makeup preview" hidden></canvas></div>
       <label>Before and after split <input type="range" id="makeup-split" min="0" max="100" value="0" disabled></label>
       <div class="lab-row"><button type="button" id="makeup-before" disabled aria-pressed="false">Show original</button><button type="button" id="delete-selfie" disabled>Delete current selfie</button></div>
+      <div class="lab-row">
+        <button type="button" id="face-retry" hidden>Find face again</button>
+        <button type="button" id="face-manual" hidden>Adjust makeup placement</button>
+      </div>
+      <div id="face-controls" hidden>
+        <label for="face-feature">Feature to position</label>
+        <select id="face-feature"><option value="0">Eye on the left</option><option value="1">Eye on the right</option><option value="2">Centre of lips</option></select>
+        <p>Tap the selected feature in the selfie or use the sliders to move it.</p>
+        <label for="face-x">Horizontal position</label><input id="face-x" type="range" min="0" max="100" step="0.25">
+        <label for="face-y">Vertical position</label><input id="face-y" type="range" min="0" max="100" step="0.25">
+        <button type="button" id="face-done">Done adjusting</button>
+      </div>
       <p class="lab-status" id="makeup-status" role="status">Your selfie stays on this device unless you share it.</p>
     </section>
     <section class="lab-panel">

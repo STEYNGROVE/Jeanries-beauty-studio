@@ -1,6 +1,7 @@
 import { env, InferenceSession, Tensor } from './ort.wasm.min.mjs';
 
-env.wasm.numThreads = 1;
+// Threaded WASM is available only on cross-origin isolated pages.
+env.wasm.numThreads = self.crossOriginIsolated ? Math.min(4, navigator.hardwareConcurrency || 1) : 1;
 env.wasm.wasmPaths = new URL('.', import.meta.url).href;
 const size = 768;
 let session;
@@ -138,10 +139,15 @@ self.addEventListener('message', async ({data: photo}) => {
       executionProviders: ['wasm'], graphOptimizationLevel: 'all',
     });
     const transform = prepare(photo);
-    const outputs = await session.run({[session.inputNames[0]]: transform.tensor});
-    const predictions = outputs[session.outputNames[0]], prototypes = outputs[session.outputNames[1]];
-    const nails = candidates(predictions).map(box=>nailMask(box,predictions,prototypes,transform,photo)).filter(Boolean);
-    self.postMessage({nails});
+    let outputs;
+    try {
+      outputs = await session.run({[session.inputNames[0]]: transform.tensor});
+    } finally { transform.tensor.dispose(); }
+    try {
+      const predictions = outputs[session.outputNames[0]], prototypes = outputs[session.outputNames[1]];
+      const nails = candidates(predictions).map(box=>nailMask(box,predictions,prototypes,transform,photo)).filter(Boolean);
+      self.postMessage({result:nails});
+    } finally { Object.values(outputs).forEach(tensor => tensor.dispose()); }
   } catch (error) {
     self.postMessage({error: error.message});
   } finally { photo.close(); }

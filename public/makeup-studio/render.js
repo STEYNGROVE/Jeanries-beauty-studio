@@ -24,6 +24,43 @@ const innerLips=[78,191,80,81,82,13,312,311,310,415,308,324,318,402,317,14,87,17
 const upperLids=[[33,246,161,160,159,158,157,173,133],[362,398,384,385,386,387,388,466,263]];
 const eyebrows=[[70,63,105,66,107,55,65,52,53,46],[336,296,334,293,300,276,283,282,295,285]];
 
+// Approximate the contours from three user-placed anchors in photo coordinates.
+export function manualLandmarks([left,right,mouth], width, height) {
+  const dx=(right.x-left.x)*width,dy=(right.y-left.y)*height;
+  const span=Math.hypot(dx,dy);
+  if(span<width*.025 || dx<=0)return [];
+  const cos=dx/span,sin=dy/span;
+  const midpoint={x:(left.x+right.x)/2,y:(left.y+right.y)/2};
+  const points=Array.from({length:478},()=>midpoint);
+  const put=(index,origin,x,y)=>{
+    points[index]={x:origin.x+span*(x*cos-y*sin)/width,y:origin.y+span*(x*sin+y*cos)/height};
+  };
+  const contour=(indices,origin,rx,ry,start=0)=>{
+    indices.forEach((index,i)=>{
+      const angle=start+2*Math.PI*i/indices.length;
+      put(index,origin,rx*Math.cos(angle),ry*Math.sin(angle));
+    });
+  };
+  const faceCentre={x:(midpoint.x+mouth.x)/2,y:(midpoint.y+mouth.y)/2};
+  contour(face,faceCentre,.94,1.06,-Math.PI/2);
+  for(const [side,eye] of [left,right].entries()){
+    upperLids[side].forEach((index,i)=>{
+      const t=i/(upperLids[side].length-1);
+      put(index,eye,(t-.5)*.47,-.065*Math.sin(t*Math.PI));
+    });
+    contour(eyebrows[side],eye,.27,.04);
+    for(const index of eyebrows[side]){
+      points[index]={x:points[index].x+.22*span*sin/width,y:points[index].y-.22*span*cos/height};
+    }
+    put(side?280:50,eye,side?.12:-.12,.52);
+    put(side?345:116,eye,side?.2:-.2,.37);
+  }
+  put(168,midpoint,0,.26);
+  contour(outerLips,mouth,.36,.115);
+  contour(innerLips,mouth,.15,.018);
+  return points;
+}
+
 function pathFrom(points, indexes) {
   const path=new Path2D();
   indexes.forEach(index=>{const [x,y]=points[index];path.lineTo(x,y);});
@@ -43,7 +80,7 @@ export function renderFace(canvas,photo,landmarks,layers,before=false) {
   if(canvas.width!==width||canvas.height!==height){canvas.width=width;canvas.height=height;}
   const ctx=canvas.getContext('2d');
   ctx.clearRect(0,0,width,height);ctx.drawImage(photo,0,0,width,height);
-  if(before||!landmarks?.length)return;
+  if(before||!landmarks||landmarks.length<468)return;
   const p=landmarks.map(point=>[point.x*width,point.y*height]);
   const span=Math.hypot(p[454][0]-p[234][0],p[454][1]-p[234][1]);
   const angle=Math.atan2(p[263][1]-p[33][1],p[263][0]-p[33][0]);

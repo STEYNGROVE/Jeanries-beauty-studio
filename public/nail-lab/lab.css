@@ -60,3 +60,7 @@
 
 .lab-action[hidden] { display: none; }
 .lab-auto.lab-selecting #apply { display: inline-block; }
+
+#selfie-video { display: block; max-width: 100%; max-height: 60vh; }
+#face-controls input { display: block; width: 100%; }
+.lab-panel .lab-row > [hidden], #face-controls[hidden], #selfie-camera-preview[hidden] { display: none; }
