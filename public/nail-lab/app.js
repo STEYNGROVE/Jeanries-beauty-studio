@@ -246,6 +246,48 @@ function modelArtwork(area, tone) {
   return {canvas,nails};
 }
 
+
+// Photographic practice models: six local, preloaded source photos.
+// Nail quads are approximations and can be refined with Advanced nail placement.
+async function modelPhoto(area,tone) {
+  const foot = /foot|feet/.test(area);
+  const both = area.startsWith('both');
+  const type = foot ? 'foot' : 'hand';
+  const filename = `/nail-lab/models/${type}-${['light','medium','deep'].includes(tone)?tone:'medium'}.webp`;
+  const response = await fetch(filename);
+  if (!response.ok) throw new Error('Model photo missing');
+  const bitmap = await createImageBitmap(await response.blob());
+  try {
+    const single = 512;
+    const output = document.createElement('canvas');
+    output.width = both ? 1024 : single;
+    output.height = single;
+    const ctx = output.getContext('2d');
+    ctx.fillStyle='#f7f0e9';ctx.fillRect(0,0,output.width,output.height);
+    const sides = both ? ['left','right'] : [area.startsWith('right')?'right':'left'];
+    const nails = {};
+    // Photo-space nail centres, measured on the supplied 512px model crops.
+    // Ordered thumb to little finger; big toe to little toe.
+    const centres = foot
+      ? [[195,71,56,60],[289,113,39,43],[360,142,33,39],[422,192,31,36],[469,236,28,34]]
+      : [[445,319,41,64],[391,110,34,65],[302,69,38,72],[209,97,36,65],[113,167,32,58]];
+    sides.forEach((side,sideIndex)=>{
+      const offset = both ? sideIndex*single : 0;
+      const mirror = side==='right';
+      ctx.save();ctx.translate(offset+(mirror?single:0),0);ctx.scale(mirror?-1:1,1);
+      ctx.drawImage(bitmap,0,0,single,single);ctx.restore();
+      centres.forEach(([cx,cy,w,h],i)=>{
+        const x=offset+(mirror?single-cx:cx);
+        const x0=x-w*.46,x1=x+w*.46,y0=cy-h*.47,y1=cy+h*.47;
+        nails[side+'-'+i]={points:[
+          {x:x0,y:y0},{x:x1,y:y0},{x:x1,y:y1},{x:x0,y:y1}
+        ],design:null};
+      });
+    });
+    return {canvas:output,nails};
+  } finally {bitmap.close();}
+}
+
 async function chooseModel() {
   const area = $('model-area').value;
   const tone = $('model-tone').value;
@@ -259,9 +301,8 @@ async function chooseModel() {
   stopDetection();
 
   const token = ++fileVersion;
-  const model = modelArtwork(area,tone);
-
   try {
+    const model = await modelPhoto(area,tone);
     const blob = await blobFromCanvas(model.canvas,'image/png');
     const bitmap = await createImageBitmap(model.canvas);
 
