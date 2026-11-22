@@ -165,7 +165,7 @@
     window.open('https://wa.me/27822265134?text=' + encodeURIComponent(message), '_blank', 'noopener,noreferrer');
   });
 
-  fetch('/data/catalogue.json').then(response => {
+  fetch('/api/catalogue').then(response => {
     if (!response.ok) throw new Error('Catalogue unavailable');
     return response.json();
   }).then(data => {
