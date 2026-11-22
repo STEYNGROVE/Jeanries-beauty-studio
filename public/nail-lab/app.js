@@ -268,17 +268,27 @@ async function modelPhoto(area,tone) {
     const nails = {};
     // Photo-space nail centres, measured on the supplied 512px model crops.
     // Ordered thumb to little finger; big toe to little toe.
+    // Measured against the actual 512x512 photographs, thumb/big toe first.
+    // Each entry is nail centre x/y and approximate width/height in pixels.
     const centres = foot
-      ? [[195,71,56,60],[289,113,39,43],[360,142,33,39],[422,192,31,36],[469,236,28,34]]
-      : [[445,319,41,64],[391,110,34,65],[302,69,38,72],[209,97,36,65],[113,167,32,58]];
+      ? [[190,67,61,82],[293,111,41,47],[357,145,35,42],[416,195,33,39],[462,240,29,38]]
+      : [[444,330,45,69],[397,80,37,66],[310,40,43,70],[222,58,43,68],[116,139,35,61]];
     sides.forEach((side,sideIndex)=>{
       const offset = both ? sideIndex*single : 0;
       const mirror = side==='right';
       ctx.save();ctx.translate(offset+(mirror?single:0),0);ctx.scale(mirror?-1:1,1);
       ctx.drawImage(bitmap,0,0,single,single);ctx.restore();
+      // Show the selected side explicitly; the right model is mirrored.
+      ctx.save();
+      ctx.font='bold 18px sans-serif';
+      ctx.textAlign='center';
+      ctx.fillStyle='#523b42';
+      ctx.fillText(`${side.toUpperCase()} ${foot?'FOOT':'HAND'}`,offset+256,493);
+      ctx.restore();
       centres.forEach(([cx,cy,w,h],i)=>{
         const x=offset+(mirror?single-cx:cx);
-        const x0=x-w*.46,x1=x+w*.46,y0=cy-h*.47,y1=cy+h*.47;
+        // Inset the paint inside the photographed nail to avoid skin spill.
+        const x0=x-w*.37,x1=x+w*.37,y0=cy-h*.37,y1=cy+h*.37;
         nails[side+'-'+i]={points:[
           {x:x0,y:y0},{x:x1,y:y0},{x:x1,y:y1},{x:x0,y:y1}
         ],design:null};
@@ -341,6 +351,9 @@ async function chooseModel() {
 }
 
 on('choose-model','click',chooseModel);
+// Selecting another hand, foot or skin tone loads the corresponding model immediately.
+on('model-area','change',chooseModel);
+on('model-tone','change',chooseModel);
 
 async function load(file) {
   if(!file)return;
