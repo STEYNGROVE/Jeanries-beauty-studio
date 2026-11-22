@@ -17,6 +17,7 @@ const limits=(x,min,max)=>Math.max(min,Math.min(max,x));
 let state=empty(), photo=null, photoBlob=null, active='', selection=new Set(), place=false, before=false;
 let undo=[],redo=[],drag=null,matrix=null,shade=null,previewDraft=false,drawFrame=0,fileVersion=0,loadedId=null;
 let detection=null,scanning=false,canRetry=false,hasChosenStyle=false,placingSequence=false;
+let pendingModel=null;
 let recent=readList('recent'),favourites=readList('favourites'),catalogue=[];
 const credit=(name,colour,category)=>({name,colour,category,brand:'Custom',finish:'Unspecified'});
 const customs=customNails;
@@ -75,7 +76,7 @@ function selectActive(id,select=false) {
   previewDraft=false;refresh();
 }
 function summary() {
-  const area=$('area').selectedOptions[0].textContent;
+  const area=[...$('area').options].find(option=>option.value===state.area).textContent;
   const names=new Map(nailsFor().map(nail=>[nail.id,nail.name]));
   const lines=Object.entries(state.nails).filter(([,n])=>n.design).map(([id,n])=>{
     const d=n.design,s=d.shade;
@@ -125,9 +126,17 @@ function refresh() {
   for(const check of grid.querySelectorAll('input')) {
     check.checked=selection.has(check.value);check.disabled=!state.nails[check.value];
   }
-  $('area').value=state.area;
+  const model=pendingModel?.token===fileVersion ? pendingModel : null;
+  const area=model?.area ?? state.area;
+  $('area').value=area;
+  if(model || state.practiceTone) {
+    $('model-area').value=area==='unspecified'?'left-hand':area;
+    $('model-tone').value=model?.tone ?? state.practiceTone;
+  }
   $('zoom').value=state.zoom;$('pan-x').value=state.panX;$('pan-y').value=state.panY;$('crop').value=state.crop;
-  $('empty-photo').hidden=!!photo;canvas.hidden=!photo;
+  $('empty-photo').textContent=model?'Opening practice model…':'Add a photo to try on nail colours.';
+  $('empty-photo').hidden=!!photo&&!model;
+  canvas.hidden=!photo||!!model;
   $('place').textContent=place?'Finish placement':'Tap photo to place';
   $('place').setAttribute('aria-pressed',String(place));$('before').setAttribute('aria-pressed',String(before));
   $('before').textContent=before?'Show edited design':'Show original photo';
@@ -139,7 +148,7 @@ function refresh() {
   $('manual-nails').hidden=!photo||scanning||!canRetry;
   $('scan-again').hidden=!photo||!canRetry||scanning;
   $('choose-styles').hidden=!state.auto;
-  $('preview-frame').setAttribute('aria-busy',String(scanning));
+  $('preview-frame').setAttribute('aria-busy',String(scanning||!!model));
   canvas.classList.toggle('mapping',$('advanced-nails').open&&(place||!!state.nails[active]));
   for(const id of ['before','rotate','delete-photo','place','centre','save','save-copy','png','jpg','share','zoom','pan-x','pan-y','crop']) $(id).disabled=!photo;
   for(const id of ['remove-nail','adjust-nail','nail-x','nail-y','nail-w','nail-h','nail-angle']) $(id).disabled=scanning||!state.nails[active];
@@ -287,30 +296,21 @@ async function modelPhoto(area,tone) {
       ctx.restore();
       centres.forEach(([cx,cy,w,h],i)=>{
         const x=offset+(mirror?single-cx:cx);
-        // Inset the paint inside the photographed nail to avoid skin spill.
-        const x0=x-w*.37,x1=x+w*.37,y0=cy-h*.37,y1=cy+h*.37;
-        nails[side+'-'+i]={points:[
-          {x:x0,y:y0},{x:x1,y:y0},{x:x1,y:y1},{x:x0,y:y1}
-        ],design:null};
+        nails[side+'-'+i]={points:rectangle(x,cy,w,h),design:null};
       });
     });
     return {canvas:output,nails};
   } finally {bitmap.close();}
 }
 
-async function chooseModel() {
-  const area = $('model-area').value;
-  const tone = $('model-tone').value;
-
-  if (!area) {
-    say('Choose a hand or foot model first.');
-    return;
-  }
-
+async function chooseModel(area=$('model-area').value, tone=$('model-tone').value) {
   stopCamera();
   stopDetection();
 
   const token = ++fileVersion;
+  pendingModel = {area,tone,token};
+  say('Opening practice model…');
+  refresh();
   try {
     const model = await modelPhoto(area,tone);
     const blob = await blobFromCanvas(model.canvas,'image/png');
@@ -328,6 +328,7 @@ async function chooseModel() {
     matrix = null;
 
     state = empty(area);
+    state.practiceTone = tone;
     state.nails = model.nails;
 
     undo = [];
@@ -340,20 +341,23 @@ async function chooseModel() {
     previewDraft = false;
     placingSequence = false;
     canRetry = false;
+    drag = null;
 
     $('advanced-nails').open = false;
 
     say('Practice model ready. Choose colours and nail art.');
-    refresh();
   } catch(error) {
-    say('Could not create the model. Try again.');
+    if(token===fileVersion)say('Could not create the model. Try again.');
+  } finally {
+    if(pendingModel?.token===token)pendingModel=null;
+    if(token===fileVersion)refresh();
   }
 }
 
-on('choose-model','click',chooseModel);
+on('choose-model','click',()=>chooseModel());
 // Selecting another hand, foot or skin tone loads the corresponding model immediately.
-on('model-area','change',chooseModel);
-on('model-tone','change',chooseModel);
+on('model-area','change',()=>chooseModel());
+on('model-tone','change',()=>chooseModel());
 
 async function load(file) {
   if(!file)return;
@@ -480,14 +484,21 @@ for(const [id,key] of [['zoom','zoom'],['pan-x','panX'],['pan-y','panY']]) {
   on(id,'change',()=>{if(previous){remember(previous);previous=null;}refresh();});
 }
 on('crop','change',event=>change(()=>{state.crop=event.target.value;}));
-on('area','change',event=>change(()=>{
-  const oldFoot=isFoot(state.area);
-  state.area=event.target.value;
-  if(state.auto)return;
-  const allowed=new Set(nailsFor().map(n=>n.id));
-  for(const id of Object.keys(state.nails)) if(oldFoot!==isFoot(state.area)||!allowed.has(id))delete state.nails[id];
-  selection.clear();
-}));
+on('area','change',event=>{
+  const area=event.target.value;
+  if(state.practiceTone || pendingModel?.token===fileVersion || (!photo && area!=='unspecified')){
+    chooseModel(area);
+    return;
+  }
+  change(()=>{
+    const oldFoot=isFoot(state.area);
+    state.area=area;
+    if(state.auto)return;
+    const allowed=new Set(nailsFor().map(n=>n.id));
+    for(const id of Object.keys(state.nails)) if(oldFoot!==isFoot(area)||!allowed.has(id))delete state.nails[id];
+    selection.clear();
+  });
+});
 on('active-nail','change',event=>selectActive(event.target.value));
 on('place','click',()=>{placingSequence=false;place=!place;before=false;say(place?'Tap the centre of the active nail on the photo.':'Placement cancelled.');refresh();});
 function add(x,y) {
@@ -570,7 +581,12 @@ on('redo','click',()=>{if(redo.length){undo.push(clone(state));state=redo.pop();
 on('reset-art','click',()=>change(()=>{for(const nail of Object.values(state.nails))nail.design=null;}));
 on('clear-design','click',()=>{
   stopDetection();
-  change(()=>{state=empty(state.area);selection.clear();});
+  change(()=>{
+    const {area,practiceTone}=state;
+    state=empty(area);
+    if(practiceTone)state.practiceTone=practiceTone;
+    selection.clear();
+  });
   canRetry=!!photo;refresh();
   say(photo?'Current design cleared. Use Find nails again to restart from this photo.':'Current design cleared.');
 });

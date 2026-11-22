@@ -9,7 +9,7 @@ export const patterns = {
 const tile = document.createElement('canvas');
 tile.width = tile.height = 96;
 const t = tile.getContext('2d');
-const shape = new Path2D('M.15 .09 Q.5 -.04 .85 .09 Q.98 .19 .94 .46 L.82 .83 Q.5 1.04 .18 .83 L.06 .46 Q.02 .19 .15 .09Z');
+const shape = new Path2D('M.16 .06 Q.5 -.06 .84 .06 Q1 .16 1 .42 L.9 .81 Q.86 1 .63 1 H.37 Q.14 1 .1 .81 L0 .42 Q0 .16 .16 .06Z');
 
 function star(ctx, x, y, size, points = 5) {
   ctx.beginPath();
@@ -79,18 +79,27 @@ function pattern(ctx, design) {
   }
 }
 
-function texture(design, rounded) {
+function texture(design, rounded, gloss) {
   t.setTransform(1,0,0,1,0,0); t.clearRect(0,0,96,96);
   t.save(); t.scale(96,96); if (rounded) t.clip(shape);
-  t.fillStyle=design.colour; t.fillRect(0,0,1,1);
-  t.save(); pattern(t,design); t.restore();
+  if (gloss) {
+    shine(design);
+  } else {
+    t.fillStyle=design.colour; t.fillRect(0,0,1,1);
+    t.save(); pattern(t,design); t.restore();
+  }
+  t.restore();
+}
+
+function shine(design) {
   const light=t.createLinearGradient(0,0,1,.31);
   const chrome=design.finish==='Chrome';
-  light.addColorStop(0,'#0005');
-  light.addColorStop(.25,chrome?'#fff9':'#fff2');
-  light.addColorStop(.47,chrome?'#0007':'#fff0');
-  light.addColorStop(.65,design.finish==='Matte'?'#fff1':chrome?'#fffd':'#fff5');
-  light.addColorStop(1,'#0006');
+  light.addColorStop(0,'#fff0');
+  light.addColorStop(.25,chrome?'#fff9':'#fff0');
+  light.addColorStop(.47,'#fff0');
+  light.addColorStop(.63,design.finish==='Matte'?'#fff1':chrome?'#fffd':'#fff6');
+  light.addColorStop(chrome?.72:.69,'#fff0');
+  light.addColorStop(1,'#fff0');
   t.fillStyle=light;t.fillRect(0,0,1,1);
   if (['Glitter','Shimmer'].includes(design.finish)) {
     for (let i=1;i<65;i++) {
@@ -99,7 +108,6 @@ function texture(design, rounded) {
       t.beginPath();t.arc(x,y,design.finish==='Glitter'?.013:.007,0,Math.PI*2);t.fill();
     }
   }
-  t.restore();
 }
 
 export function centre(points) {
@@ -152,18 +160,38 @@ function triangle(ctx, a,b,c, u,v,w) {
   ctx.drawImage(tile,0,0); ctx.restore();
 }
 
-function paintNail(ctx, nail) {
-  texture(nail.design, !nail.mask);
-  ctx.save();
-  if (nail.mask) {
-    const bounds = new Path2D();
-    for (const row of nail.mask) bounds.rect(...row);
-    ctx.clip(bounds);
+const edgeBleed = .03;
+
+function paintGeometry(nail) {
+  if (!nail.mask?.length) {
+    const c=centre(nail.points);
+    return {points:nail.points.map(({x,y})=>({
+      x:x+(x-c.x)*2*edgeBleed, y:y+(y-c.y)*2*edgeBleed,
+    })), mask:null};
   }
+
+  // Detection stores scanline rectangles in photo space and an oriented UV quad.
+  const [a,b,,d]=nail.points;
+  const width=Math.hypot(b.x-a.x,b.y-a.y);
+  const length=Math.hypot(d.x-a.x,d.y-a.y);
+  const bleed=Math.min(width,length)*edgeBleed;
+  const mask=new Path2D();
+  for (const [x,y,w,h] of nail.mask) {
+    mask.roundRect(x-bleed,y-bleed,w+2*bleed,h+2*bleed,bleed);
+  }
+  const u=bleed/width,v=bleed/length;
+  const points=[[-u,-v],[1+u,-v],[1+u,1+v],[-u,1+v]].map(([x,y])=>project(nail.points,x,y));
+  return {points,mask};
+}
+
+function paintNail(ctx, design, {points,mask}, gloss) {
+  texture(design, !mask, gloss);
+  ctx.save();
+  if (mask) ctx.clip(mask);
   const steps=6;
   for(let x=0;x<steps;x++) for(let y=0;y<steps;y++) {
     const coords=[[x,y],[x+1,y],[x+1,y+1],[x,y+1]];
-    const [a,b,c,d]=coords.map(([u,v])=>project(nail.points,u/steps,v/steps));
+    const [a,b,c,d]=coords.map(([u,v])=>project(points,u/steps,v/steps));
     const [u,v,w,z]=coords.map(([qx,qy])=>({x:qx*96/steps,y:qy*96/steps}));
     triangle(ctx,a,b,c,u,v,w); triangle(ctx,a,c,d,u,w,z);
   }
@@ -189,9 +217,16 @@ export function draw(canvas, photo, state, {active=null, selection=[], before=fa
   if(!before) {
     if(overlay.width!==width||overlay.height!==height){overlay.width=width;overlay.height=height;}
     for(const nail of Object.values(state.nails)) if(nail.design) {
-      layer.setTransform(1,0,0,1,0,0);layer.clearRect(0,0,width,height);
-      layer.setTransform(matrix);paintNail(layer,nail);
-      ctx.save();ctx.globalAlpha=nail.design.opacity/100;ctx.drawImage(overlay,0,0);ctx.restore();
+      const geometry=paintGeometry(nail);
+      ctx.save();
+      ctx.globalAlpha=nail.design.opacity/100;
+      for (const blend of ['multiply','screen']) {
+        layer.setTransform(1,0,0,1,0,0);layer.clearRect(0,0,width,height);
+        layer.setTransform(matrix);paintNail(layer,nail.design,geometry,blend==='screen');
+        ctx.globalCompositeOperation=blend;
+        ctx.drawImage(overlay,0,0);
+      }
+      ctx.restore();
     }
   }
   if(guides&&!before) for(const [id,nail] of Object.entries(state.nails)) {
