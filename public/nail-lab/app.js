@@ -275,13 +275,13 @@ async function modelPhoto(area,tone) {
     ctx.fillStyle='#f7f0e9';ctx.fillRect(0,0,output.width,output.height);
     const sides = both ? ['left','right'] : [area.startsWith('right')?'right':'left'];
     const nails = {};
-    // Photo-space nail centres, measured on the supplied 512px model crops.
-    // Ordered thumb to little finger; big toe to little toe.
-    // Measured against the actual 512x512 photographs, thumb/big toe first.
-    // Each entry is nail centre x/y and approximate width/height in pixels.
+    // Individually calibrated against the 512px photographic model crops.
+    // Order: thumb/index/middle/ring/little or big/second/third/fourth/little.
+    // x,y = actual nail centre; w,h = polish footprint; rotation in degrees.
+    // The last two small toes are intentionally well left of the old estimates.
     const centres = foot
-      ? [[190,67,61,82],[293,111,41,47],[357,145,35,42],[416,195,33,39],[462,240,29,38]]
-      : [[444,330,45,69],[397,80,37,66],[310,40,43,70],[222,58,43,68],[116,139,35,61]];
+      ? [[187,96,88,96,12],[287,109,49,53,7],[351,142,38,42,8],[395,198,32,43,-5],[441,276,28,39,-10]]
+      : [[450,330,39,66,35],[393,82,38,58,18],[300,40,38,58,13],[223,58,37,57,12],[111,139,33,53,10]];
     sides.forEach((side,sideIndex)=>{
       const offset = both ? sideIndex*single : 0;
       const mirror = side==='right';
@@ -294,9 +294,11 @@ async function modelPhoto(area,tone) {
       ctx.fillStyle='#523b42';
       ctx.fillText(`${side.toUpperCase()} ${foot?'FOOT':'HAND'}`,offset+256,493);
       ctx.restore();
-      centres.forEach(([cx,cy,w,h],i)=>{
+      centres.forEach(([cx,cy,w,h,angle],i)=>{
         const x=offset+(mirror?single-cx:cx);
-        nails[side+'-'+i]={points:rectangle(x,cy,w,h),design:null};
+        // Mirroring the model requires mirroring its nail rotation as well.
+        const radians=(mirror?-angle:angle)*Math.PI/180;
+        nails[side+'-'+i]={points:rectangle(x,cy,w,h,radians),design:null,practice:true};
       });
     });
     return {canvas:output,nails};
