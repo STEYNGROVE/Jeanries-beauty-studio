@@ -223,7 +223,10 @@ on('manual-nails','click',()=>{
 });
 on('scan-again','click',scanPhoto);
 on('advanced-nails','toggle',()=>{if(!$('advanced-nails').open)placingSequence=place=false;refresh();});
-for(const id of ['upload','camera']) on(id,'change',event=>{load(event.target.files[0]);event.target.value='';});
+for(const id of ['upload','camera']){
+  on(id,'click',()=>{if(!scanning)detectNails.prepare();});
+  on(id,'change',event=>{load(event.target.files[0]);event.target.value='';});
+}
 let cameraStream=null,cameraRequest=0;
 function stopCamera() {
   cameraRequest++;
@@ -232,6 +235,7 @@ function stopCamera() {
   $('camera-video').srcObject=null;$('camera-preview').hidden=true;
 }
 on('camera-open','click',async()=>{
+  if(!scanning)detectNails.prepare();
   stopCamera();
   const token=cameraRequest;
   try{

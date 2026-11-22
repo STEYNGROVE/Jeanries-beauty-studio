@@ -2,10 +2,11 @@
 // request fails or is cancelled, including during model startup or inference.
 export function photoDetector(url, options) {
   let worker;
-  return (photo, signal) => new Promise((resolve, reject) => {
+  const open = () => worker ??= new Worker(url, options);
+  const detect = (photo, signal) => new Promise((resolve, reject) => {
     signal.throwIfAborted();
     const deadline = performance.now() + 10000;
-    const current = worker ??= new Worker(url, options);
+    const current = open();
     const cancel = () => finish(signal.reason);
     const timeoutError = () => new DOMException('Detection timed out', 'TimeoutError');
     const timer = setTimeout(() => finish(timeoutError()), 10000);
@@ -33,6 +34,21 @@ export function photoDetector(url, options) {
       if (!signal.aborted && worker === current) finish(error);
     });
   });
+  detect.prepare = () => {
+    if (worker) return;
+    try {
+      const idle = open();
+      idle.addEventListener('error', () => {
+        if (worker === idle && !idle.onmessage) {
+          idle.terminate();
+          worker = null;
+        }
+      }, {once:true});
+    } catch {
+      // A later detection attempt can report the error alongside the photo.
+    }
+  };
+  return detect;
 }
 
 // Let the canvas draw and the browser paint before starting model work.

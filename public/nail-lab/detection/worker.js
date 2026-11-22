@@ -12,11 +12,17 @@ async function loadBytes(name) {
   return new Uint8Array(await response.arrayBuffer());
 }
 
+// Download while the camera or picker is open. Create the session only
+// after a photo has been drawn and posted by the page.
+let pendingAssets = Promise.all([
+  loadBytes('./nail-seg-int8.onnx'),
+  loadBytes('./ort-wasm-simd-threaded.wasm'),
+]).then(([model, runtime]) => ({model, runtime}), error => ({error}));
+
 async function initialize() {
-  const [model, runtime] = await Promise.all([
-    loadBytes('./nail-seg-int8.onnx'),
-    loadBytes('./ort-wasm-simd-threaded.wasm'),
-  ]);
+  const {model, runtime, error} = await pendingAssets;
+  pendingAssets = null;
+  if (error) throw error;
   env.wasm.wasmBinary = runtime;
   try {
     return await InferenceSession.create(model, {
