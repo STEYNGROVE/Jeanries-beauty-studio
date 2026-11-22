@@ -162,7 +162,33 @@ function triangle(ctx, a,b,c, u,v,w) {
 
 const edgeBleed = .03;
 
+// Smooth nail-shaped coverage for calibrated photographic models.
+// UV coordinates follow the individual rotated nail quad. The curve stays
+// inside the quad, unlike rectangular paint that can spill onto skin.
+function practiceOutline(points) {
+  const path=new Path2D();
+  const at=(u,v)=>project(points,u,v);
+  const move=(u,v)=>{const q=at(u,v);path.moveTo(q.x,q.y);};
+  const line=(u,v)=>{const q=at(u,v);path.lineTo(q.x,q.y);};
+  const curve=(a,b,c,d,e,f)=>{
+    const q=at(a,b),r=at(c,d),s=at(e,f);
+    path.bezierCurveTo(q.x,q.y,r.x,r.y,s.x,s.y);
+  };
+  move(.22,.015);
+  curve(.35,-.002,.65,-.002,.78,.015);
+  curve(.96,.035,.99,.15,.985,.29);
+  line(.965,.72);
+  curve(.96,.91,.81,.985,.61,.99);
+  curve(.50,.995,.50,.995,.39,.99);
+  curve(.19,.985,.04,.91,.035,.72);
+  line(.015,.29);
+  curve(.01,.15,.04,.035,.22,.015);
+  path.closePath();
+  return path;
+}
+
 function paintGeometry(nail) {
+  if (nail.practice) return {points:nail.points,mask:practiceOutline(nail.points)};
   if (!nail.mask?.length) {
     const c=centre(nail.points);
     return {points:nail.points.map(({x,y})=>({
