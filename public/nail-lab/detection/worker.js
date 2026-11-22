@@ -6,6 +6,25 @@ env.wasm.wasmPaths = new URL('.', import.meta.url).href;
 const size = 768;
 let session;
 
+async function loadBytes(name) {
+  const response = await fetch(new URL(name, import.meta.url));
+  if (!response.ok) throw new Error('Could not download the nail detector');
+  return new Uint8Array(await response.arrayBuffer());
+}
+
+async function initialize() {
+  const [model, runtime] = await Promise.all([
+    loadBytes('./nail-seg-int8.onnx'),
+    loadBytes('./ort-wasm-simd-threaded.wasm'),
+  ]);
+  env.wasm.wasmBinary = runtime;
+  try {
+    return await InferenceSession.create(model, {
+      executionProviders: ['wasm'], graphOptimizationLevel: 'all',
+    });
+  } finally { delete env.wasm.wasmBinary; }
+}
+
 function prepare(photo) {
   const scale = Math.min(size / photo.width, size / photo.height);
   const x = (size - photo.width * scale) / 2;
@@ -135,9 +154,7 @@ function geometry(rows, score) {
 
 self.addEventListener('message', async ({data: photo}) => {
   try {
-    session ??= await InferenceSession.create(new URL('./nail-seg.onnx', import.meta.url).href, {
-      executionProviders: ['wasm'], graphOptimizationLevel: 'all',
-    });
+    session ??= await initialize();
     const transform = prepare(photo);
     let outputs;
     try {
