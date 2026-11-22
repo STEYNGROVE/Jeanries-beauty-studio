@@ -13,6 +13,11 @@ if(params.colour)layers[params.layer].colour=params.colour;
 const canvas=$('makeup-preview'), layerFields={};
 
 const findFace=photoDetector(new URL('./face-worker.js',import.meta.url));
+// Warm the on-device landmark worker as soon as the customer interacts.
+for (const id of ['selfie','selfie-camera','selfie-live']) {
+  $(id).addEventListener('pointerdown',()=>findFace.prepare(),{once:true});
+}
+
 
 function draw() {
   if(!photo)return;
@@ -97,7 +102,7 @@ async function scanFace(){
   if(!photo||detection)return;
   const controller=new AbortController();
   detection=controller;
-  status('Finding facial features on this device…');refresh();
+  status('Scanning eyes, lips, brows and facial contours on this device…');refresh();
   try {
     await afterPreview();
     if(controller.signal.aborted)return;
@@ -105,7 +110,7 @@ async function scanFace(){
     if(controller.signal.aborted)return;
     if(features.length>=468){
       landmarks=features;anchors=null;adjusting=false;
-      status('Face found. Choose a look or adjust individual layers.');
+      status('Face mapped. Makeup colours and styles now update instantly.');
     }else status('No clear face found. Adjust makeup placement or find face again.');
   }catch(error){
     if(controller.signal.aborted)return;
