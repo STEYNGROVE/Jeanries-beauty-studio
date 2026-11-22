@@ -99,7 +99,7 @@
         if (Number.isInteger(product.regularPriceCents)) card.append(element('small','Regular brochure price: ' + money(product.regularPriceCents)));
         if (product.brochurePage) {
           const link = element('a', 'View original brochure page ' + product.brochurePage);
-          link.href = '/catalogues/justine-november-2026.pdf#page=' + product.brochurePage;
+          link.href = '/catalogues/previews/page-' + String(product.brochurePage).padStart(3, '0') + '.webp';
           link.target = '_blank'; link.rel = 'noopener'; card.append(link);
         }
         card.append(element('small','Offer valid 1–30 November 2026 · Confirm price and stock with Jeanrie'));
