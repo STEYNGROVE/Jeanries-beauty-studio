@@ -85,6 +85,15 @@
         card.append(placeholder());
       }
       card.append(element('small', product.category), element('h3', product.name));
+      if (Number.isInteger(product.referencePriceCents)) {
+        const expired = product.priceValidUntil && Date.now() >= Date.parse(product.priceValidUntil + 'T23:59:59+02:00');
+        const money = cents => new Intl.NumberFormat('en-ZA', {style:'currency',currency:'ZAR',maximumFractionDigits:2}).format(cents/100);
+        const line = element('p', (expired ? 'Expired November offer: ' : 'November brochure: ') + money(product.referencePriceCents), 'justine-reference-price');
+        card.append(line);
+        if (Number.isInteger(product.regularPriceCents)) card.append(element('small','Regular brochure price: ' + money(product.regularPriceCents)));
+        card.append(element('small','November 2026 · Page ' + product.brochurePage + ' · Confirm with Jeanrie.'));
+      }
+
       for (const deal of activeDeals(product.id)) {
         const line = element('p', deal.title + ' · ' + new Intl.NumberFormat('en-ZA', {
           style: 'currency', currency: 'ZAR', maximumFractionDigits: 2,
@@ -168,6 +177,7 @@
     dealsOnly.addEventListener('change', renderProducts);
     renderBasket();
     renderProducts();
+    if (data.pricingDisclaimer) status.insertAdjacentElement('afterend', element('p',data.pricingDisclaimer,'justine-price-disclaimer'));
     scheduleDealRefresh();
     if (location.hash.startsWith('#product-')) {
       const product = byId(location.hash.slice(1));

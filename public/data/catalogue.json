@@ -29,7 +29,15 @@
       "id": "j-butter",
       "name": "Tissue Oil Softening Body Butter",
       "category": "Body care",
-      "image": "/products/j-butter.jpg"
+      "image": "/products/j-butter.jpg",
+      "referencePriceCents": 22900,
+      "referencePriceSource": "Justine November 2026 official brochure",
+      "referencePriceUrl": "https://my.justine.co.za/",
+      "referencePriceChecked": "2026-11-22",
+      "priceValidFrom": "2026-11-01",
+      "priceValidUntil": "2026-11-30",
+      "brochurePage": 37,
+      "brochureOfferDescription": "Tissue Oil body butter 200 ml, one"
     },
     {
       "id": "j-balance",
@@ -41,13 +49,33 @@
       "id": "j-cantare",
       "name": "Cantare Gift Set",
       "category": "Fragrance",
-      "image": "/products/j-cantare.jpg"
+      "image": "/products/j-cantare.jpg",
+      "referencePriceCents": 37900,
+      "referencePriceSource": "Justine November 2026 official brochure",
+      "referencePriceUrl": "https://my.justine.co.za/",
+      "referencePriceChecked": "2026-11-22",
+      "priceValidFrom": "2026-11-01",
+      "priceValidUntil": "2026-11-30",
+      "brochurePage": 7,
+      "brochureOfferDescription": "Cantare Gift Set",
+      "sku": "1598208",
+      "regularPriceCents": 56500
     },
     {
       "id": "j-carpe",
       "name": "Carpe Diem Gift Set",
       "category": "Fragrance",
-      "image": "/products/j-carpe.jpg"
+      "image": "/products/j-carpe.jpg",
+      "referencePriceCents": 29900,
+      "referencePriceSource": "Justine November 2026 official brochure",
+      "referencePriceUrl": "https://my.justine.co.za/",
+      "referencePriceChecked": "2026-11-22",
+      "priceValidFrom": "2026-11-01",
+      "priceValidUntil": "2026-11-30",
+      "brochurePage": 9,
+      "brochureOfferDescription": "Carpe Diem Gift Set",
+      "sku": "1598209",
+      "regularPriceCents": 49200
     },
     {
       "id": "j-pedi",
@@ -126,14 +154,33 @@
       "name": "Ageless BaoFirm skincare trio",
       "category": "Skincare",
       "image": "/products/baofirm.jpg",
-      "imageAlt": "Representative BaoFirm night cream from the skincare range"
+      "imageAlt": "Representative BaoFirm night cream from the skincare range",
+      "referencePriceCents": 65900,
+      "referencePriceSource": "Justine November 2026 official brochure",
+      "referencePriceUrl": "https://my.justine.co.za/",
+      "referencePriceChecked": "2026-11-22",
+      "priceValidFrom": "2026-11-01",
+      "priceValidUntil": "2026-11-30",
+      "brochurePage": 13,
+      "brochureOfferDescription": "BaoFirm night cream + day cream + gift pouch",
+      "sku": "860393",
+      "regularPriceCents": 111700
     },
     {
       "id": "tissue-oil-body-butter-pair",
       "name": "Tissue Oil body butter (pair)",
       "category": "Body care",
       "image": "/products/body-butter.jpg",
-      "imageAlt": "Representative Tissue Oil Body Butter image"
+      "imageAlt": "Representative Tissue Oil Body Butter image",
+      "referencePriceCents": 31900,
+      "referencePriceSource": "Justine November 2026 official brochure",
+      "referencePriceUrl": "https://my.justine.co.za/",
+      "referencePriceChecked": "2026-11-22",
+      "priceValidFrom": "2026-11-01",
+      "priceValidUntil": "2026-11-30",
+      "brochurePage": 37,
+      "brochureOfferDescription": "Any two Tissue Oil body butters 200 ml",
+      "regularPriceCents": 45800
     },
     {
       "id": "tabasheer-edp-set",
@@ -152,7 +199,17 @@
       "name": "Tissue Oil Repair 200 ml",
       "category": "Body care",
       "image": "/products/active-repair.jpg",
-      "imageAlt": "Representative Active Repair Oil image; size may differ"
+      "imageAlt": "Representative Active Repair Oil image; size may differ",
+      "referencePriceCents": 18900,
+      "referencePriceSource": "Justine November 2026 official brochure",
+      "referencePriceUrl": "https://my.justine.co.za/",
+      "referencePriceChecked": "2026-11-22",
+      "priceValidFrom": "2026-11-01",
+      "priceValidUntil": "2026-11-30",
+      "brochurePage": 35,
+      "brochureOfferDescription": "Tissue Oil Original Repair 200 ml",
+      "sku": "1577793",
+      "regularPriceCents": 26900
     },
     {
       "id": "dare-to-wish-edt-sample-2-ml",
@@ -212,8 +269,19 @@
     {
       "id": "tabasheer-gold-edp-100-ml",
       "name": "Tabasheer Gold EDP 100 ml",
-      "category": "Fragrance"
+      "category": "Fragrance",
+      "referencePriceCents": 39900,
+      "referencePriceSource": "Justine November 2026 official brochure",
+      "referencePriceUrl": "https://my.justine.co.za/",
+      "referencePriceChecked": "2026-11-22",
+      "priceValidFrom": "2026-11-01",
+      "priceValidUntil": "2026-11-30",
+      "brochurePage": 49,
+      "brochureOfferDescription": "Tabasheer Gold EDP 100 ml",
+      "sku": "1546230",
+      "regularPriceCents": 59900
     }
   ],
-  "promotions": []
+  "promotions": [],
+  "pricingDisclaimer": "Justine November 2026 brochure recommended retail prices, valid 1–30 November 2026 only, while stocks last. Jeanrie confirms current price and availability."
 }
