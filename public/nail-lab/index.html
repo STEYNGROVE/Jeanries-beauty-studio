@@ -36,6 +36,34 @@
         <label class="lab-action" for="camera">Open device camera</label>
         <input class="visually-hidden" id="camera" type="file" accept="image/jpeg,image/png,image/webp" capture="environment" aria-describedby="photo-help">
       </div>
+
+      <section class="lab-model-picker" aria-label="Practice models">
+        <h3>Try a ready-made model</h3>
+        <p>No photo or AI detection needed.</p>
+        <div class="lab-grid">
+          <label>Model
+            <select id="model-area">
+              <option value="left-hand">Left hand</option>
+              <option value="right-hand">Right hand</option>
+              <option value="both-hands">Both hands</option>
+              <option value="left-foot">Left foot</option>
+              <option value="right-foot">Right foot</option>
+              <option value="both-feet">Both feet</option>
+            </select>
+          </label>
+          <label>Skin tone
+            <select id="model-tone">
+              <option value="light">Light</option>
+              <option value="medium" selected>Medium</option>
+              <option value="deep">Deep</option>
+            </select>
+          </label>
+        </div>
+        <button type="button" id="choose-model" class="lab-primary">
+          Open practice model
+        </button>
+      </section>
+
       <div id="camera-preview" hidden>
         <video id="camera-video" autoplay playsinline muted aria-label="Live camera preview"></video>
         <div class="lab-row"><button type="button" id="capture">Take photo</button><button type="button" id="cancel-camera">Close camera</button></div>

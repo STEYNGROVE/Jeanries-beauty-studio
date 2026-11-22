@@ -151,6 +151,156 @@ function refresh() {
   updateBoundary();updateSummary();drawPreview();
 }
 
+
+const modelTones = {
+  light: '#E8B99D',
+  medium: '#BD8061',
+  deep: '#754833'
+};
+
+function modelArtwork(area, tone) {
+  const foot = area.includes('foot') || area.includes('feet');
+  const both = area.startsWith('both');
+  const skin = modelTones[tone] || modelTones.medium;
+
+  const canvas = document.createElement('canvas');
+  canvas.width = 800;
+  canvas.height = 650;
+  const ctx = canvas.getContext('2d');
+
+  ctx.fillStyle = '#F7F0E9';
+  ctx.fillRect(0, 0, 800, 650);
+
+  const nails = {};
+  const sides = both ? ['left', 'right'] :
+    [area.startsWith('right') ? 'right' : 'left'];
+
+  sides.forEach((side, sideIndex) => {
+    const cx = both ? (sideIndex ? 575 : 225) : 400;
+    const scale = both ? 0.52 : 1;
+    const flip = side === 'right' ? -1 : 1;
+
+    ctx.save();
+    ctx.translate(cx, 360);
+    ctx.scale(scale * flip, scale);
+
+    ctx.fillStyle = skin;
+    ctx.strokeStyle = '#885C50';
+    ctx.lineWidth = 5;
+
+    ctx.beginPath();
+
+    if (foot) {
+      ctx.moveTo(-130, 290);
+      ctx.bezierCurveTo(-150, 130, -160, -60, -110, -150);
+      ctx.bezierCurveTo(-80, -220, -25, -180, 0, -130);
+      ctx.bezierCurveTo(45, -180, 85, -120, 100, -70);
+      ctx.bezierCurveTo(145, -80, 160, -20, 140, 50);
+      ctx.lineTo(125, 290);
+    } else {
+      ctx.moveTo(-130, 290);
+      ctx.lineTo(-155, -20);
+      ctx.bezierCurveTo(-210, -100, -170, -145, -125, -95);
+      ctx.lineTo(-105, -220);
+      ctx.bezierCurveTo(-100, -260, -60, -260, -55, -220);
+      ctx.lineTo(-45, -300);
+      ctx.bezierCurveTo(-40, -345, 5, -345, 10, -300);
+      ctx.lineTo(25, -315);
+      ctx.bezierCurveTo(30, -350, 75, -345, 75, -305);
+      ctx.lineTo(80, -240);
+      ctx.bezierCurveTo(110, -270, 145, -250, 140, -210);
+      ctx.lineTo(125, 290);
+    }
+
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+    ctx.restore();
+
+    const positions = foot
+      ? [[-100,-150],[-35,-115],[25,-80],[75,-45],[115,-10]]
+      : [[-125,-90],[-80,-215],[-20,-285],[45,-290],[105,-220]];
+
+    positions.forEach(([x,y], i) => {
+      const px = cx + x * scale * flip;
+      const py = 360 + y * scale;
+      const w = (foot ? 48 : 34) * scale;
+      const h = (foot ? 58 : 55) * scale;
+
+      const points = [
+        {x:px-w/2,y:py-h/2},
+        {x:px+w/2,y:py-h/2},
+        {x:px+w/2,y:py+h/2},
+        {x:px-w/2,y:py+h/2}
+      ];
+
+      nails[side+'-'+i] = {points, design:null};
+
+      ctx.fillStyle = '#F4D8C9';
+      ctx.beginPath();
+      ctx.roundRect(px-w/2,py-h/2,w,h,Math.min(w,h)*0.3);
+      ctx.fill();
+    });
+  });
+
+  return {canvas,nails};
+}
+
+async function chooseModel() {
+  const area = $('model-area').value;
+  const tone = $('model-tone').value;
+
+  if (!area) {
+    say('Choose a hand or foot model first.');
+    return;
+  }
+
+  stopCamera();
+  stopDetection();
+
+  const token = ++fileVersion;
+  const model = modelArtwork(area,tone);
+
+  try {
+    const blob = await blobFromCanvas(model.canvas,'image/png');
+    const bitmap = await createImageBitmap(model.canvas);
+
+    if (token !== fileVersion) {
+      bitmap.close();
+      return;
+    }
+
+    photo?.close();
+    photo = bitmap;
+    photoBlob = blob;
+    loadedId = null;
+    matrix = null;
+
+    state = empty(area);
+    state.nails = model.nails;
+
+    undo = [];
+    redo = [];
+    selection = new Set(Object.keys(model.nails));
+    active = Object.keys(model.nails)[0];
+
+    before = false;
+    place = false;
+    previewDraft = false;
+    placingSequence = false;
+    canRetry = false;
+
+    $('advanced-nails').open = false;
+
+    say('Practice model ready. Choose colours and nail art.');
+    refresh();
+  } catch(error) {
+    say('Could not create the model. Try again.');
+  }
+}
+
+on('choose-model','click',chooseModel);
+
 async function load(file) {
   if(!file)return;
   stopCamera();
