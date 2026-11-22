@@ -78,27 +78,33 @@
         image.height = 300;
         image.loading = 'lazy';
         image.decoding = 'async';
-        image.addEventListener('error', () => image.replaceWith(placeholder()), { once: true });
+        image.addEventListener('error', () => {
+          if (product.brochurePage && !image.dataset.brochureFallback) {
+            image.dataset.brochureFallback = '1';
+            image.src = '/catalogues/previews/page-' + String(product.brochurePage).padStart(3,'0') + '.webp';
+            image.alt = 'Original brochure page ' + product.brochurePage + ' (multiple products)';
+          } else image.replaceWith(placeholder());
+        });
         image.src = product.image || ('/catalogues/previews/page-' + String(product.brochurePage).padStart(3,'0') + '.webp');
         card.append(image);
       } else {
         card.append(placeholder());
       }
       card.append(element('small', product.category), element('h3', product.name));
-      if (product.imageIsBrochurePage) card.append(element('small', 'Brochure page preview · not an isolated product photo'));
+      if (product.imageIsBrochurePage || product.brochurePage) card.append(element('small', 'Image may show an original brochure page containing multiple products'));
       if (Number.isInteger(product.referencePriceCents)) {
         const expired = product.priceValidUntil && Date.now() > Date.parse(product.priceValidUntil + 'T23:59:59+02:00');
-        const money = cents => new Intl.NumberFormat('en-ZA', {style:'currency', currency:'ZAR'}).format(cents / 100);
-        card.append(element('p', (expired ? 'Expired November offer: ' : 'November brochure: ') + money(product.referencePriceCents), 'justine-reference-price'));
-        if (Number.isInteger(product.regularPriceCents)) card.append(element('small', 'Regular brochure price: ' + money(product.regularPriceCents)));
+        const money = cents => new Intl.NumberFormat('en-ZA', {style:'currency',currency:'ZAR'}).format(cents/100);
+        card.append(element('p', (expired ? 'Expired brochure offer: ' : 'November brochure: ') + money(product.referencePriceCents), 'justine-reference-price'));
+        if (Number.isInteger(product.regularPriceCents)) card.append(element('small','Regular brochure price: ' + money(product.regularPriceCents)));
         if (product.brochurePage) {
-          const page = element('a', 'View brochure page ' + product.brochurePage);
-          page.href = '/justine-brochure#page=' + product.brochurePage;
-          card.append(page);
+          const link = element('a', 'View original brochure page ' + product.brochurePage);
+          link.href = '/catalogues/justine-november-2026.pdf#page=' + product.brochurePage;
+          link.target = '_blank'; link.rel = 'noopener'; card.append(link);
         }
-        card.append(element('small', 'Offer valid 1–30 Nov 2026 · Confirm price and stock with Jeanrie'));
+        card.append(element('small','Offer valid 1–30 November 2026 · Confirm price and stock with Jeanrie'));
       } else {
-        card.append(element('p', 'Price on request', 'justine-reference-price'));
+        card.append(element('p','Price on request','justine-reference-price'));
       }
       for (const deal of activeDeals(product.id)) {
         const line = element('p', deal.title + ' · ' + new Intl.NumberFormat('en-ZA', {
