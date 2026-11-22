@@ -192,7 +192,11 @@
     {
       "id": "pure-for-him-edt",
       "name": "Pure For Him EDT",
-      "category": "Fragrance"
+      "category": "Fragrance",
+      "image": "/catalogues/previews/page-063.webp",
+      "imageAlt": "Original Justine November 2026 brochure page 63; multiple products may appear",
+      "brochurePage": 63,
+      "imageIsBrochurePage": true
     },
     {
       "id": "tissue-oil-repair-200-ml",
@@ -214,57 +218,101 @@
     {
       "id": "dare-to-wish-edt-sample-2-ml",
       "name": "Dare To Wish EDT sample 2 ml",
-      "category": "Fragrance"
+      "category": "Fragrance",
+      "image": "/catalogues/previews/page-056.webp",
+      "imageAlt": "Original Justine November 2026 brochure page 56; multiple products may appear",
+      "brochurePage": 56,
+      "imageIsBrochurePage": true
     },
     {
       "id": "a-firm-brightening-even-tone-trio",
       "name": "A-Firm Brightening Even Tone trio",
-      "category": "Skincare"
+      "category": "Skincare",
+      "image": "/catalogues/previews/page-017.webp",
+      "imageAlt": "Original Justine November 2026 brochure page 17; multiple products may appear",
+      "brochurePage": 17,
+      "imageIsBrochurePage": true
     },
     {
       "id": "a-firm-platinum-serum-and-day-cream",
       "name": "A-Firm Platinum serum and day cream",
-      "category": "Skincare"
+      "category": "Skincare",
+      "image": "/catalogues/previews/page-025.webp",
+      "imageAlt": "Original Justine November 2026 brochure page 25; multiple products may appear",
+      "brochurePage": 25,
+      "imageIsBrochurePage": true
     },
     {
       "id": "body-balance-lotion-and-body-butter",
       "name": "Body Balance lotion and body butter",
-      "category": "Body care"
+      "category": "Body care",
+      "image": "/catalogues/previews/page-080.webp",
+      "imageAlt": "Original Justine November 2026 brochure page 80; multiple products may appear",
+      "brochurePage": 80,
+      "imageIsBrochurePage": true
     },
     {
       "id": "body-balance-lotion-scrub-and-roll-on",
       "name": "Body Balance lotion, scrub and roll-on",
-      "category": "Body care"
+      "category": "Body care",
+      "image": "/catalogues/previews/page-081.webp",
+      "imageAlt": "Original Justine November 2026 brochure page 81; multiple products may appear",
+      "brochurePage": 81,
+      "imageIsBrochurePage": true
     },
     {
       "id": "carpe-diem-cologne-100-ml-50-ml",
       "name": "Carpe Diem Cologne 100 ml + 50 ml",
-      "category": "Fragrance"
+      "category": "Fragrance",
+      "image": "/catalogues/previews/page-062.webp",
+      "imageAlt": "Original Justine November 2026 brochure page 62; multiple products may appear",
+      "brochurePage": 62,
+      "imageIsBrochurePage": true
     },
     {
       "id": "honey-herbal-nail-cream-and-glass-file",
       "name": "Honey Herbal nail cream and glass file",
-      "category": "Body care"
+      "category": "Body care",
+      "image": "/catalogues/previews/page-076.webp",
+      "imageAlt": "Original Justine November 2026 brochure page 76; multiple products may appear",
+      "brochurePage": 76,
+      "imageIsBrochurePage": true
     },
     {
       "id": "ageless-baofirm-collection",
       "name": "Ageless BaoFirm collection",
-      "category": "Skincare"
+      "category": "Skincare",
+      "image": "/catalogues/previews/page-013.webp",
+      "imageAlt": "Original Justine November 2026 brochure page 13; multiple products may appear",
+      "brochurePage": 13,
+      "imageIsBrochurePage": true
     },
     {
       "id": "pro-age-renewal-collection",
       "name": "Pro-Age Renewal collection",
-      "category": "Skincare"
+      "category": "Skincare",
+      "image": "/catalogues/previews/page-015.webp",
+      "imageAlt": "Original Justine November 2026 brochure page 15; multiple products may appear",
+      "brochurePage": 15,
+      "imageIsBrochurePage": true
     },
     {
       "id": "even-radiant-collection",
       "name": "Even & Radiant collection",
-      "category": "Skincare"
+      "category": "Skincare",
+      "image": "/catalogues/previews/page-017.webp",
+      "imageAlt": "Original Justine November 2026 brochure page 17; multiple products may appear",
+      "brochurePage": 17,
+      "imageIsBrochurePage": true
     },
     {
       "id": "tissue-oil-skin-repair",
       "name": "Tissue Oil Skin Repair",
-      "category": "Body care"
+      "category": "Body care",
+      "image": "/catalogues/previews/page-041.webp",
+      "imageAlt": "Original Justine November 2026 brochure page 41; multiple products may appear",
+      "brochurePage": 41,
+      "imageIsBrochurePage": true
     },
     {
       "id": "tabasheer-gold-edp-100-ml",
@@ -279,7 +327,10 @@
       "brochurePage": 49,
       "brochureOfferDescription": "Tabasheer Gold EDP 100 ml",
       "sku": "1546230",
-      "regularPriceCents": 59900
+      "regularPriceCents": 59900,
+      "image": "/catalogues/previews/page-049.webp",
+      "imageAlt": "Original Justine November 2026 brochure page 49; multiple products may appear",
+      "imageIsBrochurePage": true
     }
   ],
   "promotions": [],

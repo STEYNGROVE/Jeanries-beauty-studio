@@ -85,6 +85,7 @@
         card.append(placeholder());
       }
       card.append(element('small', product.category), element('h3', product.name));
+      if (product.imageIsBrochurePage) card.append(element('small', 'Brochure page preview · not an isolated product photo'));
       if (Number.isInteger(product.referencePriceCents)) {
         const expired = product.priceValidUntil && Date.now() >= Date.parse(product.priceValidUntil + 'T23:59:59+02:00');
         const money = cents => new Intl.NumberFormat('en-ZA', {style:'currency',currency:'ZAR',maximumFractionDigits:2}).format(cents/100);
@@ -94,6 +95,18 @@
         card.append(element('small','November 2026 · Page ' + product.brochurePage + ' · Confirm with Jeanrie.'));
       }
 
+      if (Number.isInteger(product.referencePriceCents)) {
+        const money = cents => new Intl.NumberFormat('en-ZA', {style:'currency',currency:'ZAR'}).format(cents/100);
+        const price = element('p', 'November 2026 brochure: ' + money(product.referencePriceCents), 'justine-price');
+        card.append(price);
+        if (Number.isInteger(product.regularPriceCents)) card.append(element('small', 'Regular: ' + money(product.regularPriceCents)));
+        if (product.brochurePage) {
+          const page = element('a', 'View brochure page ' + product.brochurePage);
+          page.href = '/justine-brochure#page=' + product.brochurePage;
+          card.append(page);
+        }
+        card.append(element('small', 'Campaign: 1–30 Nov 2026 · Confirm price and stock before ordering'));
+      }
       for (const deal of activeDeals(product.id)) {
         const line = element('p', deal.title + ' · ' + new Intl.NumberFormat('en-ZA', {
           style: 'currency', currency: 'ZAR', maximumFractionDigits: 2,
