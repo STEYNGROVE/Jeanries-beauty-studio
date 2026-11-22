@@ -54,7 +54,7 @@
       const content = [product.name, product.category, product.sku || ''].join(' ').toLowerCase();
       return words.every(word => content.includes(word)) &&
         (!category.value || product.category === category.value) &&
-        (!dealsOnly.checked || activeDeals(product.id).length > 0);
+        (!dealsOnly.checked || activeDeals(product.id).length > 0 || (Number.isInteger(product.referencePriceCents) && (!product.priceValidUntil || Date.now() <= Date.parse(product.priceValidUntil + "T23:59:59+02:00"))));
     });
     grid.replaceChildren();
     status.textContent = matches.length + ' of ' + catalogue.products.length + ' products';
@@ -71,7 +71,7 @@
         art.append(monogram, element('span', 'Product photo unavailable'));
         return art;
       };
-      if (product.image) {
+      if (product.image || product.brochurePage) {
         const image = element('img');
         image.alt = product.imageAlt || product.name;
         image.width = 300;
@@ -79,7 +79,7 @@
         image.loading = 'lazy';
         image.decoding = 'async';
         image.addEventListener('error', () => image.replaceWith(placeholder()), { once: true });
-        image.src = product.image;
+        image.src = product.image || ('/catalogues/previews/page-' + String(product.brochurePage).padStart(3,'0') + '.webp');
         card.append(image);
       } else {
         card.append(placeholder());
@@ -87,25 +87,18 @@
       card.append(element('small', product.category), element('h3', product.name));
       if (product.imageIsBrochurePage) card.append(element('small', 'Brochure page preview · not an isolated product photo'));
       if (Number.isInteger(product.referencePriceCents)) {
-        const expired = product.priceValidUntil && Date.now() >= Date.parse(product.priceValidUntil + 'T23:59:59+02:00');
-        const money = cents => new Intl.NumberFormat('en-ZA', {style:'currency',currency:'ZAR',maximumFractionDigits:2}).format(cents/100);
-        const line = element('p', (expired ? 'Expired November offer: ' : 'November brochure: ') + money(product.referencePriceCents), 'justine-reference-price');
-        card.append(line);
-        if (Number.isInteger(product.regularPriceCents)) card.append(element('small','Regular brochure price: ' + money(product.regularPriceCents)));
-        card.append(element('small','November 2026 · Page ' + product.brochurePage + ' · Confirm with Jeanrie.'));
-      }
-
-      if (Number.isInteger(product.referencePriceCents)) {
-        const money = cents => new Intl.NumberFormat('en-ZA', {style:'currency',currency:'ZAR'}).format(cents/100);
-        const price = element('p', 'November 2026 brochure: ' + money(product.referencePriceCents), 'justine-price');
-        card.append(price);
-        if (Number.isInteger(product.regularPriceCents)) card.append(element('small', 'Regular: ' + money(product.regularPriceCents)));
+        const expired = product.priceValidUntil && Date.now() > Date.parse(product.priceValidUntil + 'T23:59:59+02:00');
+        const money = cents => new Intl.NumberFormat('en-ZA', {style:'currency', currency:'ZAR'}).format(cents / 100);
+        card.append(element('p', (expired ? 'Expired November offer: ' : 'November brochure: ') + money(product.referencePriceCents), 'justine-reference-price'));
+        if (Number.isInteger(product.regularPriceCents)) card.append(element('small', 'Regular brochure price: ' + money(product.regularPriceCents)));
         if (product.brochurePage) {
           const page = element('a', 'View brochure page ' + product.brochurePage);
           page.href = '/justine-brochure#page=' + product.brochurePage;
           card.append(page);
         }
-        card.append(element('small', 'Campaign: 1–30 Nov 2026 · Confirm price and stock before ordering'));
+        card.append(element('small', 'Offer valid 1–30 Nov 2026 · Confirm price and stock with Jeanrie'));
+      } else {
+        card.append(element('p', 'Price on request', 'justine-reference-price'));
       }
       for (const deal of activeDeals(product.id)) {
         const line = element('p', deal.title + ' · ' + new Intl.NumberFormat('en-ZA', {
